@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Archivo', sans-serif;
+    background-color: #ffffff;
+    color: #1a1a1a;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Archivo', sans-serif;
+
+}
+
+.trav-btn {
+    background-color: $primary-color;
+    border-radius: 5px;
+    padding: 16px 7px;
+    color: $white;
+    font-size: 14px;
+    line-height: 24px;
+    transition: all 0.3s ease;
+
+    &.btn-primary {
+        width: 100%;
+        padding: 10px;
+        background: $primary-color;
+        border: none;
+        color: $white;
+        border-radius: 4px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: #e66a00;
+        }
+    }
+}
+
+.footer-block {
+    display: block;
+    place-self: center;
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 20px;
+
+
+    .footer-text {
+        font-size: 14px;
+        line-height: 22px;
+        color: $black;
+    }
+}

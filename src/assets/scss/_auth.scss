@@ -1,0 +1,354 @@
+.trav_onboarding {
+    display: flex;
+    height: 100vh;
+
+
+    &__left {
+        flex: 1;
+        background: $bg_light-color;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__image {
+        width: 65%;
+        max-width: 420px;
+    }
+
+    &__right {
+        flex: 1;
+        background: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+}
+
+// FORM
+.trav_form-box {
+    width: 532px;
+
+    .trav_form-header {
+        margin-bottom: 35px;
+
+        img {
+            width: 100%;
+            min-width: 150px;
+            margin-bottom: 30px;
+        }
+
+        .trav_form-heading {
+            color: $heading-color;
+            font-size: 36px;
+            line-height: 32px;
+        }
+
+        .trav_form-subheading {
+            color: $text-color;
+            font-size: 16px;
+            line-height: 24px;
+        }
+    }
+
+    .trav_form-body {
+        .trav_form-group {
+            margin-bottom: 15px;
+
+            .form_label {
+                font-size: 20px;
+                line-height: 20px;
+                margin-bottom: 15px;
+                display: block;
+                color: $black;
+            }
+
+            .mobile_input {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                padding: 20px 25px;
+                border: 1px solid $border-color;
+                border-radius: 4px;
+                font-size: 14px;
+                color: $input-text-color;
+
+                .country {
+
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding-right: 10px;
+                    border-right: 1px solid #eee;
+                }
+
+                .country img {
+                    width: 20px;
+                    height: 14px;
+                    object-fit: cover;
+                }
+
+                .country span {
+                    font-size: 14px;
+                }
+
+                .down-chevron {
+                    width: 8px;
+                    height: 8px;
+                    border-left: 2px solid $input-text-color;
+                    border-bottom: 2px solid $input-text-color;
+                    transform: rotate(-45deg);
+                }
+
+                input {
+                    border: none;
+                    outline: none;
+                    padding-left: 10px;
+                    width: 100%;
+                    font-size: 14px;
+                }
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 20px 25px;
+                border: 1px solid $border-color;
+                border-radius: 4px;
+                font-size: 14px;
+                color: $input-text-color;
+
+                &:focus {
+                    border-color: $primary-color;
+                    outline: none;
+                }
+            }
+        }
+    }
+}
+
+.trav_form-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.btn-back-link {
+    color: $heading-color;
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: none;
+}
+
+.btn-link {
+    color: $error-color;
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: none;
+}
+
+.otp-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); // overlay
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.otp-modal {
+    background: $white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 532px;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn,
+.text-link {
+    color: $heading-color;
+    font-size: 16px;
+    line-height: 24px;
+    text-decoration: none;
+    text-transform: capitalize;
+    background: transparent;
+    border: none;
+}
+
+.text-link {
+    color: $primary-color;
+}
+
+.otp-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.otp-input {
+    width: 45px;
+    height: 50px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+
+    &:focus {
+        border-color: #f57c00;
+        outline: none;
+        box-shadow: 0 0 5px rgba(245, 124, 0, 0.3);
+    }
+}
+
+@media only screen and (max-width: 1600px) {
+    .otp-modal {
+        width: 465px;
+    }
+
+    .trav_form-box {
+        width: 480px;
+
+        .trav_form-header {
+            img {
+                width: 65%;
+
+            }
+        }
+    }
+
+    .trav_form-heading {
+        font-size: 32px;
+    }
+}
+
+
+@media only screen and (max-width: 1024px) {
+    .trav_form-box {
+        width: 480px;
+        padding: 12px 40px;
+
+        .trav_form-header {
+            img {
+                width: 65%;
+
+            }
+        }
+
+    }
+
+    .trav_form-heading {
+        font-size: 28px;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+
+    .trav_onboarding {
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    .trav_onboarding__left {
+        display: none;
+    }
+
+    .trav_onboarding__right {
+        width: 100%;
+        padding: 40px 20px;
+    }
+
+    .trav_form-box {
+        width: 100%;
+        max-width: 450px;
+    }
+
+    .trav_form-box {
+        padding: 0 10px;
+    }
+
+    .trav_form-header {
+        margin-bottom: 25px;
+    }
+
+    .trav_form-heading {
+        font-size: 24px;
+        line-height: 28px;
+    }
+
+    .trav_form-subheading {
+        font-size: 14px;
+    }
+
+    .form_label {
+        font-size: 16px;
+    }
+
+    .form-control,
+    .mobile_input {
+        padding: 14px 16px;
+    }
+
+
+
+    .trav_form-box {
+        text-align: center;
+
+        .trav_form-body {
+            .trav_form-group {
+                .form_label {
+                    font-size: 16px;
+                    line-height: 18px;
+                    margin-bottom: 10px;
+                }
+            }
+        }
+
+        .trav_form-header {
+            .trav_form-subheading {
+                font-size: 14px;
+            }
+
+            .trav_form-heading {
+
+                font-size: 28px;
+                line-height: 32px;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .trav_onboarding__right {
+        padding: 20px 15px;
+    }
+
+    .trav_form-box {
+        width: 100%;
+    }
+
+    .trav_form-heading {
+        font-size: 20px;
+    }
+
+    .trav_form-subheading {
+        font-size: 13px;
+    }
+
+    .form-control,
+    .mobile_input {
+        padding: 12px 14px;
+        font-size: 13px;
+    }
+
+    .mobile_input .country span {
+        font-size: 12px;
+    }
+}
