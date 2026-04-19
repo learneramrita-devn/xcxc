@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
 import './_header.scss';
+import { useAuth } from '../../app/providers/AuthContext';
 
 const NAV_TABS = [
   {
@@ -40,34 +41,44 @@ const BUSINESS_OPTIONS = [
   {
     label: 'API Partners',
     desc: 'Explore Seamless API Integration with best in class APIs',
-    path: '/business/api-partners',
+    path: '/api-partner/register',
   },
   {
     label: 'White Label Solutions',
     desc: 'Get your Travel Business live within a day',
-    path: '/business/white-label',
+    path: '/whitelabel/register',
   },
   {
     label: 'Corporates & Expense Management',
     desc: 'One Stop Solution for managing your expenses and travels',
-    path: '/business/corporates',
+    path: '/agency/register',
   },
 ];
 
 export default function Header() {
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
+  const { isLoggedIn, logout } = useAuth();
   const dropdownRef = useRef(null);
+  const accountRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setBusinessOpen(false);
-      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setBusinessOpen(false);
+      if (accountRef.current && !accountRef.current.contains(e.target)) setAccountOpen(false);
     };
     document.addEventListener('mousedown', handleOutsideClick);
     return () => document.removeEventListener('mousedown', handleOutsideClick);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    setAccountOpen(false);
+    setMobileNavOpen(false);
+    navigate('/');
+  };
 
   return (
     <header className="header">
@@ -90,36 +101,72 @@ export default function Header() {
             Offers
           </Link>
 
-          <div className="header__business" ref={dropdownRef}>
-            <button
-              className={`header__business-trigger${businessOpen ? ' header__business-trigger--open' : ''}`}
-              onClick={() => setBusinessOpen((prev) => !prev)}
-            >
-              Business
-              <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
-            </button>
+          {!isLoggedIn && (
+            <div className="header__business" ref={dropdownRef}>
+              <button
+                className={`header__business-trigger${businessOpen ? ' header__business-trigger--open' : ''}`}
+                onClick={() => setBusinessOpen((prev) => !prev)}
+              >
+                Business
+                <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              {businessOpen && (
+                <div className="header__business-dropdown">
+                  <div className="header__business-dropdown-header">For Business</div>
+                  {BUSINESS_OPTIONS.map((opt) => (
+                    <Link
+                      key={opt.path}
+                      to={opt.path}
+                      className="header__business-dropdown-item"
+                      onClick={() => { setBusinessOpen(false); setMobileNavOpen(false); }}
+                    >
+                      <span className="dropdown-item__title">{opt.label}</span>
+                      <span className="dropdown-item__desc">{opt.desc}</span>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
-            {businessOpen && (
-              <div className="header__business-dropdown">
-                <div className="header__business-dropdown-header">For Business</div>
-                {BUSINESS_OPTIONS.map((opt) => (
-                  <Link
-                    key={opt.path}
-                    to={opt.path}
-                    className="header__business-dropdown-item"
-                    onClick={() => { setBusinessOpen(false); setMobileNavOpen(false); }}
-                  >
-                    <span className="dropdown-item__title">{opt.label}</span>
-                    <span className="dropdown-item__desc">{opt.desc}</span>
+          {isLoggedIn ? (
+            <div className="header__business" ref={accountRef}>
+              <button
+                className={`header__business-trigger${accountOpen ? ' header__business-trigger--open' : ''}`}
+                onClick={() => setAccountOpen((prev) => !prev)}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+                </svg>
+                My Account
+                <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </button>
+              {accountOpen && (
+                <div className="header__business-dropdown">
+                  <div className="header__business-dropdown-header">My Account</div>
+                  <Link to="/profile" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Profile</span>
+                    <span className="dropdown-item__desc">View & edit your profile</span>
                   </Link>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Link to="/login" className="header__auth-btn" onClick={() => setMobileNavOpen(false)}>Login / Signup</Link>
+                  <Link to="/my-trips" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">My Trips</span>
+                    <span className="dropdown-item__desc">View your bookings</span>
+                  </Link>
+                  <div className="header__business-dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
+                    <span className="dropdown-item__title" style={{ color: '#E70D0D' }}>Logout</span>
+                    <span className="dropdown-item__desc">Sign out of your account</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/register" className="header__auth-btn" onClick={() => setMobileNavOpen(false)}>Login / Signup</Link>
+          )}
         </nav>
 
         <button className="header__hamburger" onClick={() => setMobileNavOpen((prev) => !prev)} aria-label="Toggle menu">

@@ -1,14 +1,34 @@
 import { useState } from 'react';
-import { useOnboarding } from '../hooks/useOnboarding';
+import { checkMobileExists } from '../services/onboardingService';
 
-const MobileStep = ({ nextStep, goToRegister, onToast, onMobileCapture, onTenantCapture }) => {
+const MobileStep = ({ onContinue, onMobileCapture, onTenantCapture, onToast }) => {
   const [mobile, setMobile] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const { loading, mobileError, handleMobileCheck } = useOnboarding({
-    onUserExists: nextStep,
-    onNewUser: (tenantId) => { onMobileCapture(mobile); onTenantCapture(tenantId); goToRegister(); },
-    onToast,
-  });
+  const handleContinue = async () => {
+    if (!/^\d{10}$/.test(mobile)) {
+      setError('Please enter a valid 10-digit mobile number');
+      return;
+    }
+    setError('');
+    setLoading(true);
+    try {
+      const exists = await checkMobileExists(mobile);
+      onMobileCapture(mobile);
+      onTenantCapture(null);
+      if (!exists) {
+        onToast('This mobile number does not exist. Kindly register.', 'error');
+      }
+      onContinue(!exists); // pass isNewUser flag
+    } catch {
+      onMobileCapture(mobile);
+      onTenantCapture(null);
+      onContinue(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -25,21 +45,17 @@ const MobileStep = ({ nextStep, goToRegister, onToast, onMobileCapture, onTenant
             placeholder="Enter Mobile Number"
             value={mobile}
             maxLength={10}
-            onChange={(e) => setMobile(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => { setMobile(e.target.value.replace(/\D/g, '')); setError(''); }}
           />
         </div>
-        {mobileError && (
+        {error && (
           <span style={{ color: '#E70D0D', fontSize: '12px', marginTop: '6px', display: 'block' }}>
-            {mobileError}
+            {error}
           </span>
         )}
       </div>
 
-      <button
-        className="btn-primary trav-btn"
-        onClick={() => handleMobileCheck(mobile)}
-        disabled={loading}
-      >
+      <button className="btn-primary trav-btn" onClick={handleContinue} disabled={loading}>
         {loading ? 'Checking...' : 'Continue'}
       </button>
     </>

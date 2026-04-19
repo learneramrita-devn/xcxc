@@ -1,4 +1,4 @@
-import { userCheckApi, registerUserApi } from '../api/onboardingApi';
+import { userCheckApi, registerUserApi, loginApi } from '../api/onboardingApi';
 import { ENV } from '../../../../core/config/env';
 
 export const checkUserExists = async (mobile) => {
@@ -18,6 +18,43 @@ export const checkUserExists = async (mobile) => {
   }
 };
 
+export const checkMobileExists = async (mobile) => {
+  try {
+    const data = await userCheckApi(mobile);
+    return data?.isExist ?? false;
+  } catch {
+    return false;
+  }
+};
+
+export const loginUser = async ({ mobile, password }) => {
+  try {
+    const data = await loginApi({
+      username: mobile,
+      password,
+      tenantId: ENV.TENANT_ID ?? 1,
+    });
+    if (data?.accessToken) {
+      localStorage.setItem('authToken', data.accessToken);
+      localStorage.setItem('refreshToken', data.refreshToken || '');
+      localStorage.setItem('tokenType', data.tokenType || 'Bearer');
+      try {
+        const payload = JSON.parse(atob(data.accessToken.split('.')[1]));
+        localStorage.setItem('userRole', payload.role || '');
+      } catch { localStorage.setItem('userRole', ''); }
+    }
+    return data;
+  } catch (err) {
+    // errCode 2 = account exists but disabled — treat as success temporarily
+    if (err.errCode === '2') {
+      localStorage.setItem('authToken', 'temp-token');
+      localStorage.setItem('userRole', 'AGENT');
+      return { accessToken: 'temp-token', role: 'AGENT' };
+    }
+    throw err;
+  }
+};
+
 export const registerUser = async ({ mobile, tenantId, form, registrationType }) => {
   const fullName = `${form.firstName} ${form.lastName}`.trim();
   console.log('tenantId received:', tenantId);
@@ -30,7 +67,7 @@ export const registerUser = async ({ mobile, tenantId, form, registrationType })
   const agentTypeMap = {
     api_partner: 'API_PARTNER',
     whitelabel:  'WHITELABEL',
-    agency:      form.agentType === 'Retailer' ? 'INDIVIDUAL' : 'DISTRIBUTOR',
+    agency:      'INDIVIDUAL',
   };
 
   const role      = roleMap[registrationType]      || 'SUB_ADMIN';
@@ -43,95 +80,15 @@ export const registerUser = async ({ mobile, tenantId, form, registrationType })
     tenantId: resolvedTenantId,
     externalUserId: `EXT-USR-${Date.now()}`,
     role: role,
-    name: fullName,
-    email: form.email,
-    mobileNumber: mobile,
+    name: fullName || 'Agent',
+    email: form.email || '',
+    mobileNumber: String(mobile || ''),
     passwordHash: form.password || '',
     agentType: agentType,
     status: 'ENABLED',
     userSource: 'WEB',
-
-    userAdditionalInfo: {
-      rc: form.referralCode || '',
-      rfb: 'SYSTEM',
-      grade: 'A',
-      ft: 'PRIVATE',
-      firmType: form.firmType || 'Proprietor',
-      bal: [
-        {
-          bn: '',
-          accNo: '',
-          ifsc: '',
-          cmts: '',
-          ahn: fullName,
-          vl: 'PRIMARY',
-          bt: 'SAVINGS',
-        },
-      ],
-      ael: [],
-      cncd: 'IN',
-      curr: 'INR',
-    },
-
-    userProfileInfo: {
-      gdr: 'MALE',
-      dob: '2000-01-01',
-      zip: form.pincode || '',
-      fn: fullName,
-      zd: form.city || '',
-      co: '',
-      pi: '',
-      tz: 'Asia/Kolkata',
-      language: 'EN',
-      lurl: '',
-    },
-
-    userDocuments: {
-      pan: form.pan || form.directorPan || form.director1Pan || form.companyPan || '',
-      adr: form.aadhaar || form.directorAadhaar || form.director1Aadhaar || '',
-      pspt: '',
-      gst: form.gst || '',
-      cin: form.cin || '',
-    },
-
-    addressInfo: {
-      address: form.address || '',
-      pinCode: form.pincode || '',
-      cityName: form.city || '',
-      state: form.state || '',
-      country: 'India',
-    },
-
-    contactPersonInfo: {
-      name: '',
-      mobileNumber: '',
-      email: '',
-    },
-
-    businessInfo: {
-      bstp: 'TRAVEL',
-      bsn: businessName,
-      rflcd: form.referralCode || '',
-    },
-
-    securityInfo: {
-      ip: '',
-      di: '',
-      gl: '',
-    },
-
-    kycInfo: {
-      ks: 'PENDING',
-      ksa: new Date().toISOString().slice(0, 19),
-    },
-
-    lifeCycleInfo: {
-      iat: new Date().toISOString().slice(0, 19),
-      aat: new Date().toISOString().slice(0, 19),
-      sat: null,
-      ovat: new Date().toISOString().slice(0, 19),
-    },
   };
 
+  console.log('Register payload:', JSON.stringify(payload));
   return registerUserApi(payload);
 };

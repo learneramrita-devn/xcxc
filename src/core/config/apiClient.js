@@ -20,10 +20,15 @@ apiClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const status = error.response?.status;
-    const message = error.response?.data?.errors?.[0]?.details || error.response?.data?.errors?.[0]?.message || error.response?.data?.message || error.message || 'Something went wrong';
-    console.error('API Error:', { status, data: error.response?.data, url: error.config?.url });
+    const errCode = error.response?.data?.errors?.[0]?.errCode;
+    const rawMessage = error.response?.data?.errors?.[0]?.details || error.response?.data?.errors?.[0]?.message || error.response?.data?.message || error.message || 'Something went wrong';
+    const message = rawMessage;
+    if (!error.config?.url?.includes('user-check')) {
+      console.error('API Error:', { status, data: error.response?.data, url: error.config?.url });
+    }
     const err = new Error(message);
     err.status = status;
+    err.errCode = errCode;
     return Promise.reject(err);
   }
 );

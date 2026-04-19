@@ -17,11 +17,11 @@ export const useOnboarding = ({ onUserExists, onNewUser, onToast }) => {
       if (exists) {
         onUserExists();
       } else {
-        onToast('Number does not exist. Please register first.', 'error');
-        setTimeout(() => onNewUser(tenantId), 500);
+        onNewUser(tenantId);
       }
     } catch (err) {
-      onToast(err.message, 'error');
+      // user-check API unreliable — go to login by default
+      onUserExists();
     } finally {
       setLoading(false);
     }

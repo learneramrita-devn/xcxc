@@ -7,18 +7,17 @@
 
     &__heading {
         font-family: $font-manrope;
-        @include font($fs-4xl, $fw-bold, 38px, $white);
+        @include font($fs-4xl, $fw-bold, 52px, $white);
         text-shadow: 0 4px 12px rgba($black, 0.35);
         max-width: 700px;
         min-width: 345px;
-        margin-bottom: $space-xl;
+        margin-bottom: $space-lg;
+    }
 
-        span {
-            color: $accent-yellow;
-            cursor: pointer;
-            transition: $transition-base;
-            &:hover { opacity: 0.85; }
-        }
+    &__subheading {
+        @include font($fs-lg, $fw-regular, 28px, rgba($white, 0.85));
+        max-width: 620px;
+        margin-bottom: 0;
     }
 
     &__form {

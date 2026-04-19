@@ -20,8 +20,10 @@ export default function AppRoutes() {
       </Route>
 
       {/* Auth — no header */}
-      <Route path="/login" element={<div>Login</div>} />
-      <Route path="/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.AGENCY} />} />
+      <Route path="/login" element={<Navigate to="/register" replace />} />
+      <Route path="/admin" element={<div>Admin Portal</div>} />
+      <Route path="/dashboard" element={<div>Dashboard</div>} />
+      <Route path="/register" element={<RegistrationForm />} />
       <Route path="/agency/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.AGENCY} />} />
       <Route path="/api-partner/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.API_PARTNER} />} />
       <Route path="/whitelabel/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.WHITELABEL} />} />

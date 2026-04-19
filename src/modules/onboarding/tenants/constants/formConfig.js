@@ -1,7 +1,7 @@
 // Field config shape: { name, label, type, placeholder, required, col, options }
 
 export const REGISTRATION_TYPES = {
-  AGENCY: 'agency',
+  AGENCY:     'agency',
   API_PARTNER: 'api_partner',
   WHITELABEL: 'whitelabel',
 };
@@ -68,23 +68,19 @@ export const FIRM_TYPE_FIELDS = {
 };
 
 export const API_PARTNER_STEP1_FIELDS = [
-  { name: 'companyName',   label: 'Company Name',   type: 'text',  placeholder: 'Enter company name',             required: true,  col: 6 },
-  { name: 'websiteUrl',    label: 'Website URL',    type: 'text',  placeholder: 'Enter website URL',              required: true,  col: 6 },
-  { name: 'firstName',     label: 'First Name',     type: 'text',  placeholder: 'Enter first name',               required: true,  col: 6 },
-  { name: 'lastName',      label: 'Last Name',      type: 'text',  placeholder: 'Enter last name',                required: true,  col: 6 },
-  { name: 'email',         label: 'Email Address',  type: 'email', placeholder: 'Enter email address',            required: true,  col: 6 },
-  { name: 'techContact',   label: 'Tech Contact Email', type: 'email', placeholder: 'Enter tech contact email',   required: true,  col: 6 },
-  { name: 'referralCode',  label: 'Referral Code',  type: 'text',  placeholder: 'Enter referral code (optional)', required: false, col: 6 },
+  { name: 'companyName',  label: 'API Partner Company Name', type: 'text',  placeholder: 'Enter company name',             required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text', placeholder: 'Enter first name',            required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                type: 'text',  placeholder: 'Enter last name',                required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address', type: 'email', placeholder: 'Enter email address',         required: true,  col: 6 },
+  { name: 'referralCode', label: 'Reference',                type: 'text',  placeholder: 'Enter reference (optional)',     required: false, col: 6 },
 ];
 
 export const WHITELABEL_STEP1_FIELDS = [
-  { name: 'brandName',     label: 'Brand Name',         type: 'text',  placeholder: 'Enter brand name',               required: true,  col: 6 },
-  { name: 'domainName',    label: 'Domain Name',        type: 'text',  placeholder: 'Enter domain (e.g. mytravel.com)', required: true,  col: 6 },
-  { name: 'firstName',     label: 'First Name (Owner)', type: 'text',  placeholder: 'Enter first name',               required: true,  col: 6 },
-  { name: 'lastName',      label: 'Last Name',          type: 'text',  placeholder: 'Enter last name',                required: true,  col: 6 },
-  { name: 'email',         label: 'Email Address',      type: 'email', placeholder: 'Enter email address',            required: true,  col: 6 },
-  { name: 'supportEmail',  label: 'Support Email',      type: 'email', placeholder: 'Enter support email',            required: true,  col: 6 },
-  { name: 'referralCode',  label: 'Referral Code',      type: 'text',  placeholder: 'Enter referral code (optional)', required: false, col: 6 },
+  { name: 'companyName',  label: 'Whitelabel Company Name',      type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const STEP3_FIELDS = [
