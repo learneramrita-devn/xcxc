@@ -1,0 +1,84 @@
+@import '../../../assets/scss/variable';
+@import 'card';
+
+.testimonials {
+    background: #f5f6f8;
+    text-align: center;
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+
+        @media (max-width: 768px) { grid-template-columns: 1fr; }
+    }
+
+    &__card {
+        @extend .card-base;
+        padding: 20px;
+        text-align: left;
+
+        // Override hover — subtle shadow instead of lift
+        &:hover {
+            transform: none;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+    }
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            background: #ccc;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .review-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #007bff;
+            margin: 0;
+        }
+
+        .meta { font-size: 12px; color: #888; }
+
+        .stars {
+            margin-left: auto;
+            color: #ffb400;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+    }
+
+    &__text {
+        font-size: 13px;
+        color: #555;
+        line-height: 1.5;
+        text-align: left;
+    }
+
+    &__nav {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+
+        button {
+            border: none;
+            background: #ddd;
+            padding: 10px 14px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s;
+
+            &:hover { background: #ccc; }
+        }
+    }
+}

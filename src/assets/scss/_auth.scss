@@ -57,9 +57,9 @@
             margin-bottom: 15px;
 
             .form_label {
-                font-size: 20px;
-                line-height: 20px;
-                margin-bottom: 15px;
+                font-size: 15px;
+                line-height: 18px;
+                margin-bottom: 10px;
                 display: block;
                 color: $black;
             }
@@ -112,7 +112,7 @@
 
             .form-control {
                 width: 100%;
-                padding: 20px 25px;
+                padding: 15px 25px;
                 border: 1px solid $border-color;
                 border-radius: 4px;
                 font-size: 14px;
@@ -121,6 +121,28 @@
                 &:focus {
                     border-color: $primary-color;
                     outline: none;
+                }
+            }
+
+            .form-select {
+                width: 100%;
+                padding: 15px 40px 15px 25px;
+                border: 1px solid $border-color;
+                border-radius: 4px;
+                font-size: 14px;
+                color: $input-text-color;
+                background-color: $white;
+                appearance: none;
+                -webkit-appearance: none;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23828284' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+                background-repeat: no-repeat;
+                background-position: right 14px center;
+                cursor: pointer;
+
+                &:focus {
+                    border-color: $primary-color;
+                    outline: none;
+                    box-shadow: none;
                 }
             }
         }
@@ -218,7 +240,20 @@
         .trav_form-header {
             img {
                 width: 65%;
+            }
+        }
 
+        .trav_form-body {
+            .trav_form-group {
+                .form_label {
+                    font-size: 15px;
+                    line-height: 18px;
+                    margin-bottom: 10px;
+                }
+
+                .form-control {
+                    padding: 15px 25px;
+                }
             }
         }
     }

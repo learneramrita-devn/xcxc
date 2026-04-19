@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Urbanist:wght@300..800&family=Manrope:wght@400..800&display=swap');
+@import 'variable';
 
 * {
     margin: 0;
@@ -7,31 +8,51 @@
 }
 
 body {
-    font-family: 'Archivo', sans-serif;
-    background-color: #ffffff;
-    color: #1a1a1a;
-    line-height: 1.5;
+    font-family: $font-primary;
+    background-color: $white;
+    color: $heading-color;
+    line-height: $lh-base;
     -webkit-font-smoothing: antialiased;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: 'Archivo', sans-serif;
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font-primary;
+}
 
+.section {
+    padding: $space-5xl 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: $fs-6xl;
+    font-weight: $fw-bold;
+    line-height: 40px;
+    color: $heading-dark;
+    font-family: $font-primary;
+    margin-bottom: $space-sm;
+}
+
+.section-subtitle {
+    font-size: $fs-2xl;
+    line-height: 20px;
+    color: $text-muted;
+    margin-bottom: $space-3xl;
 }
 
 .trav-btn {
     background-color: $primary-color;
-    border-radius: 5px;
-    padding: 16px 7px;
+    border-radius: $radius-sm;
+    padding: $space-lg $space-xs;
     color: $white;
-    font-size: 14px;
+    font-size: $fs-md;
     line-height: 24px;
-    transition: all 0.3s ease;
+    transition: $transition-slow;
 
     &.btn-primary {
         width: 100%;
@@ -39,14 +60,12 @@ h6 {
         background: $primary-color;
         border: none;
         color: $white;
-        border-radius: 4px;
-        font-weight: 600;
+        border-radius: $radius-sm;
+        font-weight: $fw-semibold;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: $transition-slow;
 
-        &:hover {
-            background: #e66a00;
-        }
+        &:hover { background: $primary-dark; }
     }
 }
 
@@ -55,11 +74,10 @@ h6 {
     place-self: center;
     position: fixed;
     bottom: 0;
-    margin-bottom: 20px;
-
+    margin-bottom: $space-xl;
 
     .footer-text {
-        font-size: 14px;
+        font-size: $fs-md;
         line-height: 22px;
         color: $black;
     }

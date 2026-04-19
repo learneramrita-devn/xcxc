@@ -1,15 +1,7 @@
-
-import RegistrationForm from "./modules/onboarding/tenants/pages/RegistrationForm";
+import AppRoutes from './app/routes/AppRoutes';
 
 function App() {
-
-
-  return (
-    <>
-      <RegistrationForm />
-
-    </>
-  )
+  return <AppRoutes />;
 }
 
-export default App
+export default App;

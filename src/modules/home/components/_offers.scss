@@ -1,0 +1,75 @@
+@import '../../../assets/scss/variable';
+@import '../../../assets/scss/mixins';
+@import 'card';
+
+.offers {
+    background: $bg-light;
+
+    .tabs {
+        @include flex(center, flex-start, $space-sm);
+        margin-bottom: $space-3xl;
+        flex-wrap: wrap;
+
+        .tab {
+            @include font($fs-lg, $fw-regular, 21px, $heading-dark);
+            cursor: pointer;
+            padding: $space-sm $space-lg;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            border-bottom: 5px solid transparent;
+            transition: $transition-base;
+            white-space: nowrap;
+
+            &.active {
+                color: $primary-color;
+                border: 0;
+                background: transparent;
+                border-radius: 0;
+                border-bottom: 5px solid $primary-color;
+                font-weight: $fw-semibold;
+            }
+
+            &:hover:not(.active) {
+                color: $primary-color;
+                border-bottom: 5px solid $primary-color;
+            }
+        }
+
+        .see-all {
+            @include btn-pill($primary-color);
+            margin-left: auto;
+            font-size: $fs-base;
+        }
+    }
+
+    .card {
+        @extend %card-base;
+
+        .image {
+            @extend %card-image-base;
+            height: 120px;
+
+            .badge {
+                @include absolute($bottom: $space-sm, $left: $space-sm);
+                background: $accent-orange;
+                color: $white;
+                @include font($fs-sm, $fw-medium);
+                padding: $space-xs $space-sm;
+                border-radius: $radius-sm;
+            }
+        }
+
+        .content {
+            padding: $space-lg;
+
+            h4 { @include font($fs-md, $fw-semibold, 22px, $heading-color); margin-bottom: $space-sm; }
+            p  { @include font($fs-sm, $fw-regular, 18px, $text-color); margin-bottom: 10px; }
+
+            .tnc {
+                @include font($fs-xs, $fw-medium, $lh-base, $primary-color);
+                cursor: pointer;
+            }
+        }
+    }
+}

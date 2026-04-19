@@ -1,10 +1,113 @@
-$primary-color: #f19517;
-$bg_light-color: #FEF1EB;
-$background-color: #f2f4f8;
-$heading-color: #111827;
-$text-color: #6B7280;
-$border-color: #D9D9D9;
-$white: #ffffff;
-$black: #000000;
-$input-text-color: #828284;
-$error-color: #E70D0D;
+// ─── Colors ────────────────────────────────────────────────────────────────
+$primary-color:     #F19517;
+$primary-dark:      #e08610;
+$primary-light:     #FEF1EB;
+
+$secondary-color:   #101F36;
+$secondary-mid:     #162C48;
+$secondary-light:   #0f2a44;
+
+$heading-color:     #111827;
+$heading-dark:      #29292A;
+$text-color:        #6B7280;
+$text-muted:        #828284;
+$text-light:        #ffffff80;
+
+$white:             #ffffff;
+$black:             #000000;
+$dark-bg:           #34363F;
+$dark-card:         #3a3d46;
+
+$bg-light:          #f5f6f8;
+$bg-cream:          #FCF9F5;
+$bg-tour:           #efebe7;
+$bg-faq:            #f7f8fa;
+$bg_light-color:    #FEF1EB;
+$background-color:  #f2f4f8;
+
+$border-color:      #D9D9D9;
+$border-light:      #eee;
+$border-subtle:     #e5e7eb;
+
+$input-text-color:  #828284;
+$error-color:       #E70D0D;
+
+$success-color:     #1a9c2c;
+$success-light:     #e6f9ec;
+$warning-color:     #ffb400;
+$warning-light:     #ffe58a;
+$info-color:        #2563eb;
+
+$accent-orange:     #ff5a1f;
+$accent-yellow:     #FFBE10;
+$accent-gold:       #FACB24;
+
+// ─── Typography ────────────────────────────────────────────────────────────
+$font-primary:      'Archivo', sans-serif;
+$font-urbanist:     'Urbanist', sans-serif;
+$font-manrope:      'Manrope', sans-serif;
+
+$fs-xs:     11px;
+$fs-sm:     12px;
+$fs-base:   13px;
+$fs-md:     14px;
+$fs-lg:     16px;
+$fs-xl:     18px;
+$fs-2xl:    20px;
+$fs-3xl:    24px;
+$fs-4xl:    28px;
+$fs-5xl:    32px;
+$fs-6xl:    40px;
+
+$fw-regular:    400;
+$fw-medium:     500;
+$fw-semibold:   600;
+$fw-bold:       700;
+
+$lh-tight:  1.2;
+$lh-base:   1.5;
+$lh-loose:  1.8;
+
+// ─── Spacing ───────────────────────────────────────────────────────────────
+$space-xs:   4px;
+$space-sm:   8px;
+$space-md:   12px;
+$space-lg:   16px;
+$space-xl:   20px;
+$space-2xl:  24px;
+$space-3xl:  32px;
+$space-4xl:  40px;
+$space-5xl:  60px;
+$space-6xl:  80px;
+
+// ─── Border Radius ─────────────────────────────────────────────────────────
+$radius-sm:     4px;
+$radius-md:     8px;
+$radius-lg:     12px;
+$radius-xl:     16px;
+$radius-pill:   20px;
+$radius-circle: 50%;
+
+// ─── Shadows ───────────────────────────────────────────────────────────────
+$shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.07);
+$shadow-md:   0 4px 16px rgba(0, 0, 0, 0.08);
+$shadow-lg:   0 8px 24px rgba(0, 0, 0, 0.1);
+$shadow-xl:   0 8px 32px rgba(0, 0, 0, 0.12);
+
+// ─── Transitions ───────────────────────────────────────────────────────────
+$transition-fast:   all 0.15s ease;
+$transition-base:   all 0.2s ease;
+$transition-slow:   all 0.3s ease;
+
+// ─── Breakpoints ───────────────────────────────────────────────────────────
+$bp-xs:   480px;
+$bp-sm:   768px;
+$bp-md:  1024px;
+$bp-lg:  1280px;
+$bp-xl:  1600px;
+
+// ─── Z-index ───────────────────────────────────────────────────────────────
+$z-header:   100;
+$z-dropdown: 200;
+$z-modal:    999;
+$z-toast:   9999;

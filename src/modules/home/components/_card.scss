@@ -1,0 +1,128 @@
+@import '../../../assets/scss/variable';
+@import '../../../assets/scss/mixins';
+
+// ─── Base Card ─────────────────────────────────────────────────────────────
+%card-base {
+    background: $white;
+    border-radius: $radius-lg;
+    border: 1px solid $border-light;
+    overflow: hidden;
+    @include card-hover();
+}
+
+.card-base { @extend %card-base; }
+
+// ─── Card Image ────────────────────────────────────────────────────────────
+%card-image-base {
+    position: relative;
+    background: $dark-card;
+}
+
+.card-image {
+    @extend %card-image-base;
+
+    &--sm  { height: 120px; }
+    &--md  { height: 180px; }
+    &--lg  { height: 220px; }
+
+    &__badge {
+        @include absolute($bottom: $space-sm, $left: $space-sm);
+        background: $primary-color;
+        color: $white;
+        font-size: $fs-sm;
+        padding: $space-xs $space-sm;
+        border-radius: $radius-sm;
+        font-weight: $fw-medium;
+    }
+
+    &__wishlist {
+        @include absolute($top: $space-md, $right: $space-md);
+        @include flex-center;
+        background: rgba($white, 0.85);
+        width: 34px;
+        height: 34px;
+        border-radius: $radius-circle;
+        cursor: pointer;
+        font-size: $fs-lg;
+        transition: $transition-base;
+
+        &:hover { background: $white; }
+    }
+}
+
+// ─── Card Body ─────────────────────────────────────────────────────────────
+.card-body {
+    padding: $space-lg;
+
+    &__title {
+        @include font($fs-md, $fw-semibold, 22px, $heading-color);
+        margin-bottom: $space-xs;
+    }
+
+    &__subtitle {
+        @include font($fs-base, $fw-regular, 20px, $text-color);
+        margin-bottom: $space-sm;
+    }
+
+    &__text {
+        @include font($fs-sm, $fw-regular, 18px, $text-color);
+        margin-bottom: 10px;
+    }
+}
+
+// ─── Card Grid ─────────────────────────────────────────────────────────────
+.card-grid {
+    display: grid;
+    gap: $space-xl;
+
+    &--5 { @include grid(5); }
+    &--4 { @include grid(4); }
+    &--3 { @include grid(3); }
+    &--2 { @include grid(2); }
+
+    @include respond-to($bp-lg) {
+        &--5 { grid-template-columns: repeat(3, 1fr); }
+        &--4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @include respond-to($bp-sm) {
+        &--5, &--4, &--3 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @include respond-to($bp-xs) {
+        &--5, &--4, &--3, &--2 { grid-template-columns: 1fr; }
+    }
+}
+
+// ─── Card Tags ─────────────────────────────────────────────────────────────
+.card-tag {
+    @include font($fs-sm, $fw-medium);
+    padding: $space-xs 10px;
+    border-radius: $radius-md;
+    display: inline-block;
+
+    &--primary  { background: $primary-light; color: $primary-color; }
+    &--warning  { background: $warning-light; color: $black; }
+    &--discount { background: $primary-color; color: $white; }
+    &--green    { background: $success-light; color: $success-color; }
+}
+
+// ─── Card Rating ───────────────────────────────────────────────────────────
+.card-rating {
+    @include flex(center, flex-start, $space-sm);
+    @include font($fs-base);
+    margin-bottom: $space-sm;
+
+    &__value { color: $success-color; font-weight: $fw-bold; }
+    &__count { color: $text-color; }
+}
+
+// ─── Card Price ────────────────────────────────────────────────────────────
+.card-price {
+    @include flex(baseline, flex-start, $space-sm);
+    margin-bottom: $space-xs;
+
+    &__current { @include font($fs-xl, $fw-bold, $lh-base, $heading-color); }
+    &__old     { @include font($fs-base, $fw-regular, $lh-base, $text-color); text-decoration: line-through; }
+    &__tax     { @include font($fs-xs, $fw-regular, $lh-base, $text-color); }
+}

@@ -1,0 +1,53 @@
+@import '../../../assets/scss/variable';
+@import '../../../assets/scss/mixins';
+
+.banner {
+    background-color: $dark-bg;
+    padding: $space-3xl $space-3xl 120px;
+
+    &__heading {
+        font-family: $font-manrope;
+        @include font($fs-4xl, $fw-bold, 38px, $white);
+        text-shadow: 0 4px 12px rgba($black, 0.35);
+        max-width: 700px;
+        min-width: 345px;
+        margin-bottom: $space-xl;
+
+        span {
+            color: $accent-yellow;
+            cursor: pointer;
+            transition: $transition-base;
+            &:hover { opacity: 0.85; }
+        }
+    }
+
+    &__form {
+        margin: 0 auto;
+        max-width: 1100px;
+        min-width: 345px;
+
+        @include respond-to($bp-xl) { max-width: 960px; }
+        @include respond-to($bp-lg) { max-width: 100%; }
+        @include respond-to($bp-sm) { min-width: unset; }
+    }
+
+    @include respond-to($bp-lg) {
+        padding: $space-5xl $space-4xl;
+        &__heading { font-size: $fs-4xl - 2; line-height: 36px; }
+    }
+
+    @include respond-to($bp-md) {
+        padding: $space-5xl $space-2xl;
+        &__heading { font-size: $fs-5xl - 6; line-height: 34px; }
+    }
+
+    @include respond-to($bp-sm) {
+        padding: $space-4xl $space-lg;
+        &__heading { font-size: $fs-4xl - 6; line-height: 30px; }
+    }
+
+    @include respond-to($bp-xs) {
+        padding: $space-3xl $space-lg;
+        &__heading { font-size: $fs-2xl; line-height: 28px; }
+    }
+}

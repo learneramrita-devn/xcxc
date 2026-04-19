@@ -1,0 +1,49 @@
+@import '../../../assets/scss/variable';
+
+.feature-bar {
+    background: #101F36;
+    padding: 60px 60px;
+
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+    }
+
+    &__item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: $white;
+        font-size: 13px;
+        position: relative;
+        cursor: pointer;
+        transition: opacity 0.2s;
+
+        &:hover { opacity: 0.8; }
+
+        .icon { font-size: 16px; }
+
+        &:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            height: 20px;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    @media (max-width: 768px) {
+        padding: 16px;
+
+        &__container {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        &__item:not(:last-child)::after { display: none; }
+    }
+}

@@ -1,0 +1,269 @@
+@import '../../../assets/scss/variable';
+
+$bp-xl: 1600px;
+$bp-lg: 1280px;
+$bp-md: 1024px;
+$bp-sm:  768px;
+$bp-xs:  480px;
+
+.flight-form {
+    background: $white;
+    border-radius: 12px;
+    min-width: 345px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    overflow: visible;
+
+    // ─── Radio Trip Type ───────────────────────────────────────
+    &__trips {
+        display: flex;
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    &__trip {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 22px;
+        font-size: 14px;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 500;
+        color: $text-color;
+        background: #F3F4F6;
+        border-radius: 8px 8px 0 0;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s;
+        user-select: none;
+
+        input[type='radio'] {
+            accent-color: $primary-color;
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        &.active {
+            background: $white;
+            color: $primary-color;
+            font-weight: 600;
+            box-shadow: 0 -2px 0 $primary-color inset;
+        }
+
+        &:hover:not(.active) {
+            background: #e9eaec;
+        }
+    }
+
+    // ─── Fields Row ────────────────────────────────────────────
+    &__fields {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        padding: 20px 20px;
+        flex-wrap: wrap;
+        row-gap: 12px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-width: 120px;
+        padding: 0 14px;
+        border-right: 1px solid $border-color;
+
+        &:first-child { padding-left: 0; }
+        &:last-of-type { border-right: none; }
+
+        &.disabled {
+            opacity: 0.45;
+            pointer-events: none;
+        }
+    }
+
+    &__label {
+        font-size: 11px;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 600;
+        color: $text-color;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 4px;
+    }
+
+    &__input {
+        border: none;
+        outline: none;
+        font-size: 14px;
+        font-family: 'Archivo', sans-serif;
+        color: $heading-color;
+        background: transparent;
+        width: 100%;
+        padding: 4px 0;
+
+        &::placeholder { color: #B0B3B8; font-size: 13px; }
+
+        &--num {
+            width: 48px;
+            font-weight: 600;
+        }
+
+        &[type='date'] { cursor: pointer; }
+    }
+
+    &__travellers {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    &__select {
+        border: none;
+        outline: none;
+        font-size: 13px;
+        font-family: 'Archivo', sans-serif;
+        color: $heading-color;
+        background: transparent;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    &__divider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1.5px solid $border-color;
+        flex-shrink: 0;
+        color: $primary-color;
+        margin: 0 4px;
+
+        svg { width: 16px; height: 16px; }
+    }
+
+    // ─── Search Button ─────────────────────────────────────────
+    &__search {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: $primary-color;
+        color: $white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 15px;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.2s;
+        flex-shrink: 0;
+
+        svg { width: 18px; height: 18px; }
+
+        &:hover { background: darken(#f19517, 8%); }
+    }
+
+    // ─── Special Fares ──────────────────────────────────────────
+    &__fares {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 14px 20px;
+        border-top: 1px solid $border-color;
+
+        @media (max-width: $bp-sm) { padding: 12px 16px; gap: 8px; }
+    }
+
+    &__fares-label {
+        font-size: 13px;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 700;
+        color: $heading-color;
+        margin-right: 4px;
+        white-space: nowrap;
+    }
+
+    &__fare {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-family: 'Urbanist', sans-serif;
+        font-weight: 500;
+        color: $text-color;
+        cursor: pointer;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1.5px solid $border-color;
+        transition: all 0.2s;
+        user-select: none;
+        white-space: nowrap;
+
+        input[type='checkbox'] {
+            accent-color: $primary-color;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        &.active {
+            border-color: $primary-color;
+            background: $bg_light-color;
+            color: $primary-color;
+            font-weight: 600;
+        }
+
+        &:hover:not(.active) {
+            border-color: #aaa;
+            background: #f9f9f9;
+        }
+    }
+
+    // ─── Responsive ────────────────────────────────────────────
+    @media (max-width: $bp-xl) {
+        &__fields { padding: 18px 18px; }
+        &__field { padding: 0 12px; }
+    }
+
+    @media (max-width: $bp-lg) {
+        &__fields { padding: 16px; }
+        &__trip { padding: 9px 18px; font-size: 13px; }
+    }
+
+    @media (max-width: $bp-md) {
+        border-radius: 12px;
+
+        &__fields {
+            flex-wrap: wrap;
+            gap: 0;
+            row-gap: 12px;
+        }
+
+        &__field {
+            flex: 1 1 calc(50% - 28px);
+            border-right: none;
+            border-bottom: 1px solid $border-color;
+            padding: 8px 0;
+        }
+
+        &__divider { display: none; }
+    }
+
+    @media (max-width: $bp-sm) {
+        min-width: unset;
+        border-radius: 12px;
+
+        &__trips { flex-wrap: wrap; }
+
+        &__trip { flex: 1; justify-content: center; border-radius: 6px 6px 0 0; }
+
+        &__field { flex: 1 1 100%; }
+
+        &__search { width: 100%; justify-content: center; }
+    }
+}

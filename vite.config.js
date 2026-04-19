@@ -14,4 +14,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  server: {
+    proxy: {
+      '/ums': {
+        target: 'http://13.126.207.62:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

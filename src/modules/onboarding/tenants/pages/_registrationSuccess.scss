@@ -1,0 +1,61 @@
+@import '../../../../assets/scss/variable';
+
+.reg-success {
+    text-align: center;
+    padding: 20px 0;
+
+    &__icon {
+        font-size: 56px;
+        margin-bottom: 16px;
+    }
+
+    &__title {
+        font-size: 32px;
+        font-weight: 700;
+        color: $primary-color;
+        margin-bottom: 8px;
+        font-family: 'Archivo', sans-serif;
+    }
+
+    &__heading {
+        font-size: 18px;
+        font-weight: 600;
+        color: $heading-color;
+        margin-bottom: 12px;
+    }
+
+    &__subtitle {
+        font-size: 14px;
+        color: $text-color;
+        line-height: 22px;
+        margin-bottom: 32px;
+
+        strong {
+            color: $heading-color;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    &__edit-btn {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        border: 1.5px solid $primary-color;
+        border-radius: 4px;
+        color: $primary-color;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        font-family: 'Archivo', sans-serif;
+
+        &:hover {
+            background: $bg_light-color;
+        }
+    }
+}
