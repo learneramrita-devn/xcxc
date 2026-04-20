@@ -91,7 +91,7 @@ $bp-xs:   480px;
 
         &:hover { color: $primary-color; }
 
-        @media (max-width: $bp-xl) { font-size: 18px; }
+        @media (max-width: $bp-xl) { font-size: 16px; font-weight: 400; }
         @media (max-width: $bp-lg) { font-size: 16px; line-height: 26px; }
         @media (max-width: $bp-md) { font-size: 14px; line-height: 22px; }
     }
@@ -125,7 +125,7 @@ $bp-xs:   480px;
 
             &--open .chevron { transform: rotate(180deg); }
 
-            @media (max-width: $bp-xl) { font-size: 18px; }
+            @media (max-width: $bp-xl) { font-size: 16px; font-weight: 400; }
             @media (max-width: $bp-lg) { font-size: 16px; line-height: 26px; }
             @media (max-width: $bp-md) { font-size: 14px; line-height: 22px; }
         }
@@ -271,6 +271,8 @@ $bp-xs:   480px;
         white-space: nowrap;
 
         svg { width: 20px; height: 20px; flex-shrink: 0; }
+
+        img { width: 40px; height: 40px; flex-shrink: 0; }
 
         &:hover,
         &.active {

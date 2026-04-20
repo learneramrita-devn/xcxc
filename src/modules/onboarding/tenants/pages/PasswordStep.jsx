@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../services/onboardingService';
 import { useAuth } from '../../../../app/providers/AuthContext';
+import PasswordInput from '../components/PasswordInput';
 
-// Tenant/Admin roles → Admin Portal, Agent/Merchant → Home
 const ADMIN_ROLES = ['TENANT_ADMIN', 'API_PARTNER', 'WHITELABEL_PARTNER', 'SUPER_ADMIN'];
 
-const PasswordStep = ({ prevStep, onToast, goToRegister }) => {
+const PasswordStep = ({ prevStep, onToast, mobile }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({});
@@ -37,7 +37,6 @@ const PasswordStep = ({ prevStep, onToast, goToRegister }) => {
       }
     } catch (err) {
       if (err.errCode === '2') {
-        // Temporary: account disabled but treat as login success
         login('temp-token', '', 'AGENT');
         navigate('/');
       } else {
@@ -50,13 +49,26 @@ const PasswordStep = ({ prevStep, onToast, goToRegister }) => {
 
   return (
     <>
+      {mobile && (
+        <div className="trav_form-group">
+          <label className="form_label">Mobile Number</label>
+          <div className="mobile_input" style={{ background: '#f9fafb' }}>
+            <div className="country">
+              <img src="https://flagcdn.com/w40/in.png" alt="India" />
+              <span>+91</span>
+            </div>
+            <input type="tel" value={mobile} readOnly style={{ background: 'transparent', color: '#6B7280' }} />
+          </div>
+        </div>
+      )}
+
       <div className="trav_form-group">
         <label className="form_label">Email Address <span style={{ color: '#E70D0D' }}>*</span></label>
         <input
           type="email"
           value={email}
           onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: '' })); }}
-          placeholder="Enter your email address"
+          placeholder="Enter your registered email"
           className="form-control"
         />
         {errors.email && <span style={{ color: '#E70D0D', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.email}</span>}
@@ -64,8 +76,8 @@ const PasswordStep = ({ prevStep, onToast, goToRegister }) => {
 
       <div className="trav_form-group">
         <label className="form_label">Password <span style={{ color: '#E70D0D' }}>*</span></label>
-        <input
-          type="password"
+        <PasswordInput
+          name="password"
           value={password}
           onChange={(e) => { setPassword(e.target.value); setErrors((p) => ({ ...p, password: '' })); }}
           placeholder="Enter your password"
@@ -75,18 +87,13 @@ const PasswordStep = ({ prevStep, onToast, goToRegister }) => {
       </div>
 
       <button className="btn-primary trav-btn" onClick={handleContinue} disabled={loading}>
-        {loading ? 'Verifying...' : 'Continue'}
+        {loading ? 'Verifying...' : 'Login'}
       </button>
 
       <div className="trav_form-footer">
         <span className="btn-back-link" onClick={prevStep} style={{ cursor: 'pointer' }}>Back</span>
         <span className="btn-link" style={{ cursor: 'pointer', color: '#f19517' }}>Forgot Password</span>
       </div>
-
-      <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px', color: '#6B7280' }}>
-        Login with OTP?{' '}
-        <span onClick={prevStep} style={{ color: '#f19517', cursor: 'pointer', fontWeight: 600 }}>Click here</span>
-      </p>
     </>
   );
 };

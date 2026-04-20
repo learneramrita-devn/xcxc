@@ -9,7 +9,6 @@ import Step2AgencyDetails from './Step2AgencyDetails';
 import Step3Password from './Step3Password';
 import TermsAgreement from './TermsAgreement';
 import OTPModal from '../components/OTPModal';
-import AccountTypeSelect from './AccountTypeSelect';
 import { registerUser } from '../services/onboardingService';
 import Toast from '../../../../shared/components/Toast';
 import RegistrationSuccess from './RegistrationSuccess';
@@ -18,44 +17,45 @@ import { useAuth } from '../../../../app/providers/AuthContext';
 import { REGISTRATION_TYPES } from '../constants/formConfig';
 
 const STEPS = {
-  MOBILE:       'mobile',
-  OTP:          'otp',
+  MOBILE:        'mobile',
   LOGIN_PASSWORD:'login_password',
-  ACCOUNT_TYPE: 'account_type',
-  REGISTER_1:   'register_1',
-  REGISTER_2:   'register_2',
-  REGISTER_3:   'register_3',
-  TERMS:        'terms',
-  SUCCESS:      'success',
-  UPDATE_EMAIL: 'update_email',
+  OTP:           'otp',          // only for register flow
+  REGISTER_1:    'register_1',
+  REGISTER_2:    'register_2',
+  REGISTER_3:    'register_3',
+  TERMS:         'terms',
+  SUCCESS:       'success',
+  UPDATE_EMAIL:  'update_email',
 };
 
 const getStepContent = (regType) => ({
-  [STEPS.MOBILE]:        { heading: 'Login / Sign up',     subheading: 'Log in or create an account using your mobile number' },
-  [STEPS.OTP]:           { heading: 'OTP Verification',    subheading: '' },
-  [STEPS.LOGIN_PASSWORD]:{ heading: 'Login',               subheading: '' },
-  [STEPS.ACCOUNT_TYPE]:  { heading: 'Select Account Type', subheading: 'Choose the type of account you want to create' },
+  [STEPS.MOBILE]:        { heading: 'Login / Sign up',  subheading: 'Log in or create an account using your mobile number' },
+  [STEPS.LOGIN_PASSWORD]:{ heading: 'Login',            subheading: '' },
+  [STEPS.OTP]:           { heading: 'OTP Verification', subheading: '' },
   [STEPS.REGISTER_1]:    {
     heading: regType === REGISTRATION_TYPES.API_PARTNER ? 'API Partner Sign Up'
            : regType === REGISTRATION_TYPES.WHITELABEL  ? 'Whitelabel Partner Sign Up'
+           : regType === REGISTRATION_TYPES.CORPORATE   ? 'Corporate Sign Up'
            : 'Agent Sign Up',
     subheading: 'Please enter your Basic Details to sign up',
   },
   [STEPS.REGISTER_2]:    {
     heading: regType === REGISTRATION_TYPES.API_PARTNER ? 'API Partner Sign Up'
            : regType === REGISTRATION_TYPES.WHITELABEL  ? 'Whitelabel Partner Sign Up'
+           : regType === REGISTRATION_TYPES.CORPORATE   ? 'Corporate Sign Up'
            : 'Agent Sign Up',
     subheading: 'Please enter your Agency Details to sign up',
   },
   [STEPS.REGISTER_3]:    {
     heading: regType === REGISTRATION_TYPES.API_PARTNER ? 'API Partner Sign Up'
            : regType === REGISTRATION_TYPES.WHITELABEL  ? 'Whitelabel Partner Sign Up'
+           : regType === REGISTRATION_TYPES.CORPORATE   ? 'Corporate Sign Up'
            : 'Agent Sign Up',
     subheading: 'Create Strong Password for Login',
   },
-  [STEPS.TERMS]:         { heading: 'Terms & Conditions',  subheading: '' },
-  [STEPS.SUCCESS]:       { heading: '',                    subheading: '' },
-  [STEPS.UPDATE_EMAIL]:  { heading: '',                    subheading: '' },
+  [STEPS.TERMS]:         { heading: 'Terms & Conditions', subheading: '' },
+  [STEPS.SUCCESS]:       { heading: '', subheading: '' },
+  [STEPS.UPDATE_EMAIL]:  { heading: '', subheading: '' },
 });
 
 const RegistrationForm = ({ registrationType: initialType = null }) => {
@@ -65,28 +65,21 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
   const [registerData, setRegisterData] = useState({});
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [mobileExists, setMobileExists] = useState(false);
-  const [registrationType, setRegistrationType] = useState(initialType || REGISTRATION_TYPES.AGENCY);
+  const [registrationType, setRegistrationType] = useState(initialType);
 
   const navigate = useNavigate();
   const { login } = useAuth();
   const stepContent = getStepContent(registrationType);
   const showToast = (message, type) => setToast({ message, type });
 
-  const getRedirectPath = () => {
-    if (registrationType === REGISTRATION_TYPES.API_PARTNER ||
-        registrationType === REGISTRATION_TYPES.WHITELABEL) return '/dashboard';
-    return '/';
+  const handleStep1Next = (d) => {
+    // if came from Login/Signup, update registrationType from selected type
+    if (!initialType && d.selectedAgentType) {
+      setRegistrationType(d.selectedAgentType);
+    }
+    setRegisterData((p) => ({ ...p, ...d }));
+    setStep(STEPS.REGISTER_2);
   };
-
-  const handleOtpLogin = () => {
-    const role = localStorage.getItem('userRole') || '';
-    login(localStorage.getItem('authToken'), localStorage.getItem('refreshToken'), role);
-    showToast('Login Successful! Welcome back.', 'success');
-    setTimeout(() => navigate(getRedirectPath()), 800);
-  };
-
-  const handleStep1Next = (d) => { setRegisterData((p) => ({ ...p, ...d })); setStep(STEPS.REGISTER_2); };
   const handleStep2Next = (d) => { setRegisterData((p) => ({ ...p, ...d })); setStep(STEPS.REGISTER_3); };
   const handleStep3Submit = (password) => { setRegisterData((p) => ({ ...p, password })); setStep(STEPS.TERMS); };
 
@@ -101,8 +94,6 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
       setLoading(false);
     }
   };
-
-  const goToRegister = () => setStep(STEPS.REGISTER_1);
 
   const hideHeader = [STEPS.SUCCESS, STEPS.UPDATE_EMAIL].includes(step);
 
@@ -126,37 +117,32 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
         <div className="trav_form-body">
           <form onSubmit={(e) => e.preventDefault()}>
 
+            {/* Step 1: Mobile — exist → password login, not exist → toast + register button */}
             {step === STEPS.MOBILE && (
               <MobileStep
-                onContinue={(isNewUser) => { setMobileExists(!isNewUser); setStep(STEPS.OTP); }}
+                onContinue={() => setStep(STEPS.LOGIN_PASSWORD)}
+                onRegister={() => setStep(STEPS.OTP)}
                 onMobileCapture={setMobile}
                 onTenantCapture={setTenantId}
                 onToast={showToast}
               />
             )}
 
-            {step === STEPS.OTP && (
-              <OTPModal
-                mobile={mobile}
-                onClose={() => setStep(STEPS.MOBILE)}
-                onLogin={mobileExists ? handleOtpLogin : null}
-                onRegister={!mobileExists ? goToRegister : null}
-                onLoginWithPassword={mobileExists ? () => setStep(STEPS.LOGIN_PASSWORD) : null}
-              />
-            )}
-
+            {/* Step 2A: Login with password (existing user) */}
             {step === STEPS.LOGIN_PASSWORD && (
               <PasswordStep
                 prevStep={() => setStep(STEPS.MOBILE)}
                 onToast={showToast}
-                goToRegister={goToRegister}
+                mobile={mobile}
               />
             )}
 
-            {step === STEPS.ACCOUNT_TYPE && (
-              <AccountTypeSelect
-                onSelect={(type) => { setRegistrationType(type); setStep(STEPS.REGISTER_1); }}
-                onBack={() => setStep(STEPS.MOBILE)}
+            {/* Step 2B: OTP — only for register flow */}
+            {step === STEPS.OTP && (
+              <OTPModal
+                mobile={mobile}
+                onClose={() => setStep(STEPS.MOBILE)}
+                onSuccess={() => setStep(STEPS.REGISTER_1)}
               />
             )}
 
@@ -164,7 +150,7 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
               <AgentRegisterStep
                 onNext={handleStep1Next}
                 goToLogin={() => setStep(STEPS.MOBILE)}
-                registrationType={registrationType}
+                registrationType={initialType}
               />
             )}
 

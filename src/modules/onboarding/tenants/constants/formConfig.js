@@ -1,19 +1,52 @@
 // Field config shape: { name, label, type, placeholder, required, col, options }
 
 export const REGISTRATION_TYPES = {
-  AGENCY:     'agency',
+  AGENCY:      'agency',
   API_PARTNER: 'api_partner',
-  WHITELABEL: 'whitelabel',
+  WHITELABEL:  'whitelabel',
+  CORPORATE:   'corporate',
 };
+
+// UserType options per agentType
+export const USER_TYPE_OPTIONS = {
+  agency:    ['Retailer', 'Distributor'],
+  api_partner: ['Admin', 'Sub Admin'],
+  whitelabel:  ['Admin', 'Sub Admin'],
+  corporate:   ['Admin', 'Sub Admin', 'Employee'],
+};
+
+// agentType backend values
+export const AGENT_TYPE_BACKEND = {
+  agency:    'AGENCY',
+  api_partner: 'API_PARTNER',
+  whitelabel:  'WHITE_LABEL',
+  corporate:   'CORP_PARTNER',
+};
+
+// agentType display labels for selection
+export const AGENT_TYPE_LABELS = [
+  { value: 'agency',      label: 'Agent / Merchant' },
+  { value: 'api_partner', label: 'API Partner' },
+  { value: 'whitelabel',  label: 'White Label' },
+  { value: 'corporate',   label: 'Corporate' },
+];
 
 export const STEP1_FIELDS = [
   { name: 'agencyName',        label: 'Agency Name',                  type: 'text',   placeholder: 'Enter agency name',              required: true,  col: 6 },
-  { name: 'agentType',         label: 'Agent Type',                   type: 'select', placeholder: 'Select Agent Type',              required: true,  col: 6, options: ['Retailer', 'Distributor'] },
-  { name: 'distributorAgents', label: 'How many Agents do you have as a Distributor?', type: 'number', placeholder: 'Enter number of agents', required: false, col: 12, showIf: (form) => form.agentType === 'Distributor' },
+  { name: 'userType',          label: 'User Type',                    type: 'select', placeholder: 'Select User Type',               required: true,  col: 6, options: ['Retailer', 'Distributor'] },
   { name: 'firstName',         label: 'First Name (Director/ Owner)', type: 'text',   placeholder: 'Enter first name',               required: true,  col: 6 },
   { name: 'lastName',          label: 'Last Name',                    type: 'text',   placeholder: 'Enter last name',                required: true,  col: 6 },
   { name: 'email',             label: 'Email Address',                type: 'email',  placeholder: 'Enter email address',            required: true,  col: 6 },
   { name: 'referralCode',      label: 'Referral Code',                type: 'text',   placeholder: 'Enter referral code (optional)', required: false, col: 6 },
+];
+
+export const CORPORATE_STEP1_FIELDS = [
+  { name: 'companyName',  label: 'Corporate Company Name',       type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin', 'Employee'] },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const FIRM_TYPE_FIELDS = {
@@ -68,11 +101,12 @@ export const FIRM_TYPE_FIELDS = {
 };
 
 export const API_PARTNER_STEP1_FIELDS = [
-  { name: 'companyName',  label: 'API Partner Company Name', type: 'text',  placeholder: 'Enter company name',             required: true,  col: 12 },
-  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text', placeholder: 'Enter first name',            required: true,  col: 6 },
-  { name: 'lastName',     label: 'Last Name',                type: 'text',  placeholder: 'Enter last name',                required: true,  col: 6 },
-  { name: 'email',        label: 'Communication Email Address', type: 'email', placeholder: 'Enter email address',         required: true,  col: 6 },
-  { name: 'referralCode', label: 'Reference',                type: 'text',  placeholder: 'Enter reference (optional)',     required: false, col: 6 },
+  { name: 'companyName',  label: 'API Partner Company Name',     type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const WHITELABEL_STEP1_FIELDS = [
@@ -80,6 +114,7 @@ export const WHITELABEL_STEP1_FIELDS = [
   { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
   { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
   { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
   { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 

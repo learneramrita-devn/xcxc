@@ -2,43 +2,77 @@ import { useState } from 'react';
 import StepBar from '../components/StepBar';
 import FormRenderer from '../components/FormRenderer';
 import TermsCheckbox from '../components/TermsCheckbox';
-import { STEP1_FIELDS, API_PARTNER_STEP1_FIELDS, WHITELABEL_STEP1_FIELDS, REGISTRATION_TYPES } from '../constants/formConfig';
+import {
+  STEP1_FIELDS, API_PARTNER_STEP1_FIELDS, WHITELABEL_STEP1_FIELDS,
+  CORPORATE_STEP1_FIELDS, REGISTRATION_TYPES, USER_TYPE_OPTIONS, AGENT_TYPE_LABELS,
+} from '../constants/formConfig';
 import { validateFields } from '../services/validationService';
-
-const INITIAL_FORM = {
-  agencyName: '', companyName: '', brandName: '', domainName: '',
-  agentType: '', distributorAgents: '',
-  firstName: '', lastName: '', email: '', referralCode: '',
-  websiteUrl: '', techContact: '', supportEmail: '',
-};
 
 const FIELDS_MAP = {
   [REGISTRATION_TYPES.AGENCY]:     STEP1_FIELDS,
   [REGISTRATION_TYPES.API_PARTNER]: API_PARTNER_STEP1_FIELDS,
   [REGISTRATION_TYPES.WHITELABEL]:  WHITELABEL_STEP1_FIELDS,
+  [REGISTRATION_TYPES.CORPORATE]:   CORPORATE_STEP1_FIELDS,
 };
 
-const AgentRegisterStep = ({ onNext, goToLogin, registrationType }) => {
-  const [form, setForm] = useState(INITIAL_FORM);
+const AgentRegisterStep = ({ onNext, goToLogin, registrationType: initialType }) => {
+  const [selectedType, setSelectedType] = useState(initialType || '');
+  const [form, setForm] = useState({
+    agencyName: '', companyName: '', firstName: '', lastName: '',
+    email: '', referralCode: '', userType: '',
+  });
   const [errors, setErrors] = useState({});
+
+  const regType = initialType || selectedType;
+  const fields = FIELDS_MAP[regType] || [];
+
+  // Dynamic userType options based on selected agentType
+  const userTypeOptions = USER_TYPE_OPTIONS[regType] || [];
+
+  // Inject dynamic userType options into fields
+  const resolvedFields = fields.map((f) =>
+    f.name === 'userType' ? { ...f, options: userTypeOptions } : f
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
   };
 
-  const fields = FIELDS_MAP[registrationType] || STEP1_FIELDS;
-
   const handleNext = () => {
-    const errs = validateFields(fields, form);
+    if (!regType) { setErrors({ agentType: 'Please select a business type' }); return; }
+    const errs = validateFields(resolvedFields, form);
     if (Object.keys(errs).length) { setErrors(errs); return; }
-    onNext(form);
+    onNext({ ...form, selectedAgentType: regType });
   };
 
   return (
     <>
       <StepBar total={3} current={1} />
-      <FormRenderer fields={fields} form={form} errors={errors} onChange={handleChange} />
+
+      {/* Show agentType selector only when coming from Login/Signup (no initialType) */}
+      {!initialType && (
+        <div className="trav_form-group">
+          <label className="form_label">Business Type <span style={{ color: '#E70D0D' }}>*</span></label>
+          <select
+            className="form-select"
+            value={selectedType}
+            onChange={(e) => { setSelectedType(e.target.value); setForm((p) => ({ ...p, userType: '' })); setErrors({}); }}
+          >
+            <option value="">Select Business Type</option>
+            {AGENT_TYPE_LABELS.map((opt) => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          {errors.agentType && <span style={{ color: '#E70D0D', fontSize: '12px', marginTop: '4px', display: 'block' }}>{errors.agentType}</span>}
+        </div>
+      )}
+
+      {/* Show fields only after type is selected */}
+      {regType && (
+        <FormRenderer fields={resolvedFields} form={form} errors={errors} onChange={handleChange} />
+      )}
+
       <TermsCheckbox />
 
       <button className="btn-primary trav-btn" onClick={handleNext}>Continue</button>

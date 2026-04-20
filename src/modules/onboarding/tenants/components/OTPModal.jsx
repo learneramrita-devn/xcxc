@@ -4,11 +4,10 @@ import OTPInput from './OTPInput';
 const MOCK_OTP = '123456';
 const TIMER_SECONDS = 60;
 
-const OTPModal = ({ mobile, onClose, onLogin, onRegister, onLoginWithPassword }) => {
+const OTPModal = ({ mobile, onClose, onSuccess }) => {
   const [otp, setOtp] = useState('');
   const [error, setError] = useState('');
   const [timer, setTimer] = useState(TIMER_SECONDS);
-  const [loading, setLoading] = useState(false);
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -29,15 +28,10 @@ const OTPModal = ({ mobile, onClose, onLogin, onRegister, onLoginWithPassword })
 
   const maskMobile = (m) => m ? m.replace(/(\d{2})\d{6}(\d{2})/, '$1xxxxxx$2') : '';
 
-  const handleVerify = async () => {
+  const handleVerify = () => {
     if (otp.length < 6) { setError('Please enter the 6-digit OTP'); return; }
     if (otp !== MOCK_OTP) { setError('Invalid OTP. Please try again'); return; }
-    setError('');
-    if (onLogin) {
-      onLogin();
-    } else if (onRegister) {
-      onRegister();
-    }
+    onSuccess();
   };
 
   return (
@@ -65,17 +59,9 @@ const OTPModal = ({ mobile, onClose, onLogin, onRegister, onLoginWithPassword })
         }
       </div>
 
-      <button className="btn-primary trav-btn" onClick={handleVerify} disabled={loading}>
-        {loading ? 'Checking...' : 'Continue'}
-      </button>
+      <button className="btn-primary trav-btn" onClick={handleVerify}>Continue</button>
 
-      {onLoginWithPassword && (
-        <p style={{ textAlign: 'center', marginTop: '14px', fontSize: '13px', color: '#6B7280' }}>
-          Login with password?{' '}
-          <span onClick={onLoginWithPassword} style={{ color: '#f19517', cursor: 'pointer', fontWeight: 600 }}>Click here</span>
-        </p>
-      )}
-      <div className="trav_form-footer" style={{ justifyContent: 'center', marginTop: '8px' }}>
+      <div className="trav_form-footer" style={{ justifyContent: 'center', marginTop: '12px' }}>
         <span onClick={onClose} style={{ cursor: 'pointer', fontSize: '13px', color: '#6B7280' }}>← Back</span>
       </div>
     </>

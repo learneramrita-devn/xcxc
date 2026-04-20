@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import StepBar from '../components/StepBar';
 import { validatePassword } from '../services/validationService';
+import PasswordInput from '../components/PasswordInput';
 
 const INITIAL_FORM = { password: '', confirmPassword: '' };
 
@@ -33,13 +34,13 @@ const Step3Password = ({ onSubmit, onBack, loading }) => {
 
       <div className="trav_form-group">
         <label className="form_label">Password <span style={{ color: '#E70D0D' }}>*</span></label>
-        <input type="password" name="password" value={form.password} onChange={handleChange} placeholder="Enter password" className="form-control" />
+        <PasswordInput name="password" value={form.password} onChange={handleChange} placeholder="Enter password" className="form-control" />
         {err('password')}
       </div>
 
       <div className="trav_form-group">
         <label className="form_label">Confirm Password <span style={{ color: '#E70D0D' }}>*</span></label>
-        <input type="password" name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm your password" className="form-control" />
+        <PasswordInput name="confirmPassword" value={form.confirmPassword} onChange={handleChange} placeholder="Confirm your password" className="form-control" />
         {err('confirmPassword')}
       </div>
 

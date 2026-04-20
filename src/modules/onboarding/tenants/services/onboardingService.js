@@ -51,6 +51,12 @@ export const loginUser = async ({ mobile, password }) => {
       localStorage.setItem('userRole', 'AGENT');
       return { accessToken: 'temp-token', role: 'AGENT' };
     }
+    // errCode 23 = user not registered with this tenant
+    if (err.errCode === '23') {
+      const e = new Error('Mobile number not registered. Please check your credentials or register first.');
+      e.errCode = '23';
+      throw e;
+    }
     throw err;
   }
 };
@@ -59,19 +65,17 @@ export const registerUser = async ({ mobile, tenantId, form, registrationType })
   const fullName = `${form.firstName} ${form.lastName}`.trim();
   console.log('tenantId received:', tenantId);
 
-  const roleMap = {
-    api_partner: 'API_PARTNER',
-    whitelabel:  'WHITELABEL_PARTNER',
-    agency:      'SUB_ADMIN',
-  };
   const agentTypeMap = {
     api_partner: 'API_PARTNER',
-    whitelabel:  'WHITELABEL',
-    agency:      'INDIVIDUAL',
+    whitelabel:  'WHITE_LABEL',
+    agency:      'AGENCY',
+    corporate:   'CORP_PARTNER',
   };
 
-  const role      = roleMap[registrationType]      || 'SUB_ADMIN';
-  const agentType = agentTypeMap[registrationType] || 'INDIVIDUAL';
+  // if came from Login/Signup, use selectedAgentType from form
+  const resolvedType = form.selectedAgentType || registrationType;
+  const role      = 'SUB_ADMIN';
+  const agentType = agentTypeMap[resolvedType] || 'AGENCY';
 
   const businessName = form.agencyName || form.companyName || form.brandName || '';
   const resolvedTenantId = tenantId ?? ENV.TENANT_ID ?? 1;

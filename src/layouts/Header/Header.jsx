@@ -1,35 +1,20 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import logo from '../../assets/images/logo.png';
+import flightIcon from '../../assets/images/flight-icon.svg';
+import hotelIcon from '../../assets/images/hotel-icon.svg';
+import busIcon from '../../assets/images/bus-icon.svg';
+import trainIcon from '../../assets/images/train-icon.svg';
+import insuranceIcon from '../../assets/images/travel-insurance-icon.svg';
 import './_header.scss';
 import { useAuth } from '../../app/providers/AuthContext';
 
 const NAV_TABS = [
-  {
-    label: 'Flights',
-    path: '/flights',
-    icon: <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" /></svg>,
-  },
-  {
-    label: 'Hotels',
-    path: '/hotels',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 22V8l9-6 9 6v14" /><path d="M9 22V12h6v10" /></svg>,
-  },
-  {
-    label: 'Bus',
-    path: '/bus',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="13" rx="2" /><path d="M3 10h18M8 19l-1 2m10-2 1 2M8 5V3m8 2V3" /></svg>,
-  },
-  {
-    label: 'Trains',
-    path: '/trains',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="3" width="16" height="14" rx="3" /><path d="M4 11h16M8 17l-2 4m10-4 2 4M12 3v8" /></svg>,
-  },
-  {
-    label: 'Travel Insurance',
-    path: '/insurance',
-    icon: <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>,
-  },
+  { label: 'Flights', path: '/flights', icon: flightIcon },
+  { label: 'Hotels', path: '/hotels', icon: hotelIcon },
+  { label: 'Bus', path: '/bus', icon: busIcon },
+  { label: 'Trains', path: '/trains', icon: trainIcon },
+  { label: 'Travel Insurance', path: '/insurance', icon: insuranceIcon },
 ];
 
 const BUSINESS_OPTIONS = [
@@ -51,7 +36,7 @@ const BUSINESS_OPTIONS = [
   {
     label: 'Corporates & Expense Management',
     desc: 'One Stop Solution for managing your expenses and travels',
-    path: '/agency/register',
+    path: '/corporate/register',
   },
 ];
 
@@ -89,15 +74,15 @@ export default function Header() {
 
         <nav className={`header__nav${mobileNavOpen ? ' header__nav--open' : ''}`}>
           <Link to="/support" className="header__link" onClick={() => setMobileNavOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18.364 5.636a9 9 0 1 1-12.728 0" /><path d="M12 2v7" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             Support
           </Link>
           <Link to="/my-trips" className="header__link" onClick={() => setMobileNavOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
             My Trips
           </Link>
           <Link to="/offers" className="header__link" onClick={() => setMobileNavOpen(false)}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
             Offers
           </Link>
 
@@ -107,7 +92,8 @@ export default function Header() {
                 className={`header__business-trigger${businessOpen ? ' header__business-trigger--open' : ''}`}
                 onClick={() => setBusinessOpen((prev) => !prev)}
               >
-                Business
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              Business
                 <svg className="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M6 9l6 6 6-6" />
                 </svg>
@@ -184,7 +170,7 @@ export default function Header() {
             to={path}
             className={({ isActive }) => `header__tab${isActive ? ' active' : ''}`}
           >
-            {icon}
+            <img src={icon} alt={label} />
             {label}
           </NavLink>
         ))}

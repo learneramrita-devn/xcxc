@@ -27,6 +27,7 @@ export default function AppRoutes() {
       <Route path="/agency/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.AGENCY} />} />
       <Route path="/api-partner/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.API_PARTNER} />} />
       <Route path="/whitelabel/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.WHITELABEL} />} />
+      <Route path="/corporate/register" element={<RegistrationForm registrationType={REGISTRATION_TYPES.CORPORATE} />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
