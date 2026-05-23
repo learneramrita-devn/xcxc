@@ -1,20 +1,30 @@
 import { useState } from 'react';
+import { updateEmailApi } from '../api/onboardingApi';
 
 const maskEmail = (email) =>
   email ? email.replace(/(.{2})(.*)(@.*)/, (_, a, b, c) => a + '*'.repeat(b.length) + c) : '';
 
-const UpdateEmail = ({ onBackToSignIn }) => {
+const UpdateEmail = ({ userId, onBackToSignIn, onToast }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       setError('Please enter a valid email address');
       return;
     }
     setError('');
-    setSubmitted(true);
+    setLoading(true);
+    try {
+      await updateEmailApi({ userId, email });
+      setSubmitted(true);
+    } catch (err) {
+      onToast?.(err.message || 'Failed to update email', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -60,8 +70,8 @@ const UpdateEmail = ({ onBackToSignIn }) => {
         )}
       </div>
 
-      <button className="btn-primary trav-btn" onClick={handleSubmit}>
-        Submit
+      <button className="btn-primary trav-btn" onClick={handleSubmit} disabled={loading}>
+        {loading ? 'Updating...' : 'Submit'}
       </button>
     </>
   );

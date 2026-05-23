@@ -52,85 +52,97 @@ export default function FlightSearchForm() {
       {/* Search Fields */}
       <div className="flight-form__fields">
         <div className="flight-form__field">
-          <span className="flight-form__label">From</span>
-          <input
-            name="from"
-            value={form.from}
-            onChange={handleChange}
-            placeholder="Enter city or airport"
-            className="flight-form__input"
-          />
-        </div>
-
-        <div className="flight-form__divider">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M8 3L4 7l4 4M16 21l4-4-4-4M4 7h16M4 17h16" />
-          </svg>
-        </div>
-
-        <div className="flight-form__field">
-          <span className="flight-form__label">To</span>
-          <input
-            name="to"
-            value={form.to}
-            onChange={handleChange}
-            placeholder="Enter city or airport"
-            className="flight-form__input"
-          />
-        </div>
-
-        <div className="flight-form__field">
-          <span className="flight-form__label">Departure</span>
-          <input
-            type="date"
-            name="departure"
-            value={form.departure}
-            onChange={handleChange}
-            className="flight-form__input"
-          />
-        </div>
-
-        <div className={`flight-form__field${tripType === 'one-way' ? ' disabled' : ''}`}>
-          <span className="flight-form__label">Return</span>
-          <input
-            type="date"
-            name="return"
-            value={form.return}
-            onChange={handleChange}
-            disabled={tripType === 'one-way'}
-            className="flight-form__input"
-          />
-        </div>
-
-        <div className="flight-form__field">
-          <span className="flight-form__label">Travellers & Class</span>
-          <div className="flight-form__travellers">
+          <div className="flight-form__field-top">
+            <span className="flight-form__label">From</span>
+          </div>
+          <div className="flight-form__field-bottom">
             <input
-              type="number"
-              name="travellers"
-              value={form.travellers}
-              min={1}
-              max={9}
+              name="from"
+              value={form.from}
               onChange={handleChange}
-              className="flight-form__input flight-form__input--num"
+              placeholder="Enter city or airport"
+              className="flight-form__input"
             />
-            <select
-              name="travelClass"
-              value={form.travelClass}
-              onChange={handleChange}
-              className="flight-form__select"
-            >
-              {CLASSES.map((c) => <option key={c}>{c}</option>)}
-            </select>
+          </div>
+          <div className="flight-form__divider">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M8 3L4 7l4 4M16 21l4-4-4-4M4 7h16M4 17h16" />
+            </svg>
           </div>
         </div>
 
-        <button className="flight-form__search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
-          </svg>
-          Search
-        </button>
+        <div className="flight-form__field">
+          <div className="flight-form__field-top">
+            <span className="flight-form__label">To</span>
+          </div>
+          <div className="flight-form__field-bottom">
+            <input
+              name="to"
+              value={form.to}
+              onChange={handleChange}
+              placeholder="Enter city or airport"
+              className="flight-form__input"
+            />
+          </div>
+        </div>
+
+        <div className="flight-form__field">
+          <div className="flight-form__field-top">
+            <span className="flight-form__label">Departure</span>
+          </div>
+          <div className="flight-form__field-bottom">
+            <input
+              type="date"
+              name="departure"
+              value={form.departure}
+              onChange={handleChange}
+              className="flight-form__input"
+            />
+          </div>
+        </div>
+
+        <div className={`flight-form__field${tripType === 'one-way' ? ' disabled' : ''}`}>
+          <div className="flight-form__field-top">
+            <span className="flight-form__label">Return</span>
+          </div>
+          <div className="flight-form__field-bottom">
+            <input
+              type="date"
+              name="return"
+              value={form.return}
+              onChange={handleChange}
+              disabled={tripType === 'one-way'}
+              className="flight-form__input"
+            />
+          </div>
+        </div>
+
+        <div className="flight-form__field">
+          <div className="flight-form__field-top">
+            <span className="flight-form__label">Travellers & Class</span>
+          </div>
+          <div className="flight-form__field-bottom">
+            <div className="flight-form__travellers">
+              <input
+                type="number"
+                name="travellers"
+                value={form.travellers}
+                min={1}
+                max={9}
+                onChange={handleChange}
+                className="flight-form__input flight-form__input--num"
+              />
+              <select
+                name="travelClass"
+                value={form.travelClass}
+                onChange={handleChange}
+                className="flight-form__select"
+              >
+                {CLASSES.map((c) => <option key={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Special Fares */}
@@ -146,6 +158,13 @@ export default function FlightSearchForm() {
             {label}
           </label>
         ))}
+        
+        <button className="flight-form__search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
+          </svg>
+          Search
+        </button>
       </div>
     </div>
   );

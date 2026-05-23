@@ -8,8 +8,8 @@ import { validateFields } from '../services/validationService';
 
 const INITIAL_FORM = { firmType: '' };
 
-const Step2AgencyDetails = ({ onNext, onBack }) => {
-  const [form, setForm] = useState({ firmType: 'Proprietor' });
+const Step2AgencyDetails = ({ onNext, onBack, initialData = {} }) => {
+  const [form, setForm] = useState({ firmType: initialData.firmType || 'Proprietor', ...initialData });
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {

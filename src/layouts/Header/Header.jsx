@@ -8,6 +8,7 @@ import trainIcon from '../../assets/images/train-icon.svg';
 import insuranceIcon from '../../assets/images/travel-insurance-icon.svg';
 import './_header.scss';
 import { useAuth } from '../../app/providers/AuthContext';
+import Toast from '../../shared/components/Toast';
 
 const NAV_TABS = [
   { label: 'Flights', path: '/flights', icon: flightIcon },
@@ -44,6 +45,7 @@ export default function Header() {
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
+  const [toast, setToast] = useState(null);
   const { isLoggedIn, logout } = useAuth();
   const dropdownRef = useRef(null);
   const accountRef = useRef(null);
@@ -62,11 +64,13 @@ export default function Header() {
     logout();
     setAccountOpen(false);
     setMobileNavOpen(false);
-    navigate('/');
+    setToast({ message: 'Logged out successfully!', type: 'success' });
+    setTimeout(() => navigate('/'), 1000);
   };
 
   return (
     <header className="header">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="header__top">
         <Link to="/" className="header__logo">
           <img src={logo} alt="TravelApp" />

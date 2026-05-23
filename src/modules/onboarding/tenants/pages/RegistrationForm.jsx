@@ -15,6 +15,7 @@ import RegistrationSuccess from './RegistrationSuccess';
 import UpdateEmail from './UpdateEmail';
 import { useAuth } from '../../../../app/providers/AuthContext';
 import { REGISTRATION_TYPES } from '../constants/formConfig';
+import SEOMeta from '../../../../shared/components/SEOMeta';
 
 const STEPS = {
   MOBILE:        'mobile',
@@ -62,7 +63,9 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
   const [step, setStep] = useState(STEPS.MOBILE);
   const [mobile, setMobile] = useState('');
   const [tenantId, setTenantId] = useState(null);
+  const [loginType, setLoginType] = useState('user');
   const [registerData, setRegisterData] = useState({});
+  const [registeredUserId, setRegisteredUserId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [registrationType, setRegistrationType] = useState(initialType);
@@ -86,7 +89,8 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
   const handleTermsAccept = async () => {
     setLoading(true);
     try {
-      await registerUser({ mobile, tenantId, form: registerData, registrationType });
+      const res = await registerUser({ mobile, tenantId, form: registerData, registrationType });
+      setRegisteredUserId(res?.userId || null);
       setStep(STEPS.SUCCESS);
     } catch (err) {
       showToast(err.message, 'error');
@@ -99,6 +103,10 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
 
   return (
     <AuthLayout>
+      <SEOMeta
+        title="Register – Create Your Travel Account – TravelApp"
+        description="Sign up on TravelApp as a Travel Agent, API Partner, Whitelabel Partner or Corporate. Get access to exclusive travel deals and booking tools."
+      />
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
 
       <div className="trav_form-box">
@@ -124,6 +132,7 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
                 onRegister={() => setStep(STEPS.OTP)}
                 onMobileCapture={setMobile}
                 onTenantCapture={setTenantId}
+                onLoginTypeCapture={setLoginType}
                 onToast={showToast}
               />
             )}
@@ -134,6 +143,7 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
                 prevStep={() => setStep(STEPS.MOBILE)}
                 onToast={showToast}
                 mobile={mobile}
+                loginType={loginType}
               />
             )}
 
@@ -151,6 +161,7 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
                 onNext={handleStep1Next}
                 goToLogin={() => setStep(STEPS.MOBILE)}
                 registrationType={initialType}
+                initialData={registerData}
               />
             )}
 
@@ -158,6 +169,7 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
               <Step2AgencyDetails
                 onNext={handleStep2Next}
                 onBack={() => setStep(STEPS.REGISTER_1)}
+                initialData={registerData}
               />
             )}
 
@@ -185,7 +197,11 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
             )}
 
             {step === STEPS.UPDATE_EMAIL && (
-              <UpdateEmail onBackToSignIn={() => setStep(STEPS.MOBILE)} />
+              <UpdateEmail
+                userId={registeredUserId}
+                onBackToSignIn={() => setStep(STEPS.MOBILE)}
+                onToast={showToast}
+              />
             )}
 
           </form>

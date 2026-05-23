@@ -13,45 +13,45 @@ $bp-xs:  480px;
     width: 100%;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     overflow: visible;
+    padding: 30px 20px;
 
     // ─── Radio Trip Type ───────────────────────────────────────
     &__trips {
         display: flex;
         gap: 0;
-        margin-bottom: 0;
+        margin-bottom: 20px;
+        justify-content: flex-start;
     }
 
     &__trip {
         display: flex;
         align-items: center;
         gap: 7px;
-        padding: 10px 22px;
-        font-size: 14px;
-        font-family: 'Urbanist', sans-serif;
+        padding: 0;
+        padding-right: 20px;
+        font-size: 16px;
         font-weight: 500;
-        color: $text-color;
-        background: #F3F4F6;
+        color: #29292A;
+        background: transparent;
         border-radius: 8px 8px 0 0;
         cursor: pointer;
         transition: background 0.2s, color 0.2s;
         user-select: none;
 
         input[type='radio'] {
-            accent-color: $primary-color;
+            accent-color: #062D77;
             width: 15px;
             height: 15px;
             cursor: pointer;
         }
 
         &.active {
-            background: $white;
-            color: $primary-color;
+            color: #29292A;
             font-weight: 600;
-            box-shadow: 0 -2px 0 $primary-color inset;
+            border-radius: 50%;
         }
 
         &:hover:not(.active) {
-            background: #e9eaec;
         }
     }
 
@@ -60,9 +60,10 @@ $bp-xs:  480px;
         display: flex;
         align-items: center;
         gap: 0;
-        padding: 20px 20px;
         flex-wrap: wrap;
         row-gap: 12px;
+        border: 1px solid #E9E9E9;
+        border-radius: 10px;
     }
 
     &__field {
@@ -70,10 +71,22 @@ $bp-xs:  480px;
         flex-direction: column;
         flex: 1;
         min-width: 120px;
-        padding: 0 14px;
+        padding: 20px 20px;
         border-right: 1px solid $border-color;
+        position: relative;
 
-        &:first-child { padding-left: 0; }
+        &-top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        &-bottom {
+            display: flex;
+            align-items: center;
+        }
+
+
         &:last-of-type { border-right: none; }
 
         &.disabled {
@@ -83,29 +96,26 @@ $bp-xs:  480px;
     }
 
     &__label {
-        font-size: 11px;
-        font-family: 'Urbanist', sans-serif;
+        font-size: 14px;
+        line-height: 22px;
         font-weight: 600;
-        color: $text-color;
+        color: #828284;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: 4px;
     }
 
     &__input {
         border: none;
         outline: none;
-        font-size: 14px;
-        font-family: 'Archivo', sans-serif;
-        color: $heading-color;
+        font-size: 20px;
+        color: #29292A;
         background: transparent;
         width: 100%;
-        padding: 4px 0;
 
-        &::placeholder { color: #B0B3B8; font-size: 13px; }
+        &::placeholder { color: #29292A; font-size: 20px; line-height: 20px; background: transparent; }
 
         &--num {
-            width: 48px;
+            width: 25px;
             font-weight: 600;
         }
 
@@ -122,7 +132,6 @@ $bp-xs:  480px;
         border: none;
         outline: none;
         font-size: 13px;
-        font-family: 'Archivo', sans-serif;
         color: $heading-color;
         background: transparent;
         cursor: pointer;
@@ -139,7 +148,12 @@ $bp-xs:  480px;
         border: 1.5px solid $border-color;
         flex-shrink: 0;
         color: $primary-color;
-        margin: 0 4px;
+        position: absolute;
+        right: -16px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: $white;
+        z-index: 1;
 
         svg { width: 16px; height: 16px; }
     }
@@ -174,7 +188,6 @@ $bp-xs:  480px;
         flex-wrap: wrap;
         gap: 12px;
         padding: 14px 20px;
-        border-top: 1px solid $border-color;
 
         @media (max-width: $bp-sm) { padding: 12px 16px; gap: 8px; }
     }
@@ -226,13 +239,17 @@ $bp-xs:  480px;
 
     // ─── Responsive ────────────────────────────────────────────
     @media (max-width: $bp-xl) {
-        &__fields { padding: 18px 18px; }
-        &__field { padding: 0 12px; }
+        &__field { padding: 14px 14px; }
+        &__label { font-size: 12px; }
+        &__input { font-size: 15px; }
+        &__input::placeholder { font-size: 15px; }
     }
 
     @media (max-width: $bp-lg) {
-        &__fields { padding: 16px; }
-        &__trip { padding: 9px 18px; font-size: 13px; }
+        &__field { padding: 16px; }
+        &__trip { padding: 0; padding-right: 18px; font-size: 13px; }
+        &__input { font-size: 16px; }
+        &__input::placeholder { font-size: 16px; }
     }
 
     @media (max-width: $bp-md) {
@@ -251,6 +268,8 @@ $bp-xs:  480px;
             padding: 8px 0;
         }
 
+        &__input { font-size: 15px; }
+        &__input::placeholder { font-size: 15px; }
         &__divider { display: none; }
     }
 
@@ -263,6 +282,8 @@ $bp-xs:  480px;
         &__trip { flex: 1; justify-content: center; border-radius: 6px 6px 0 0; }
 
         &__field { flex: 1 1 100%; }
+        &__input { font-size: 14px; }
+        &__input::placeholder { font-size: 14px; }
 
         &__search { width: 100%; justify-content: center; }
     }

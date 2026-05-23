@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { checkMobileExists } from '../services/onboardingService';
+import { checkUserExists } from '../services/onboardingService';
 
 const MobileStep = ({ onContinue, onRegister, onMobileCapture, onTenantCapture, onToast }) => {
   const [mobile, setMobile] = useState('');
@@ -16,18 +16,18 @@ const MobileStep = ({ onContinue, onRegister, onMobileCapture, onTenantCapture, 
     setNotFound(false);
     setLoading(true);
     try {
-      const exists = await checkMobileExists(mobile);
+      const { exists, tenantId } = await checkUserExists(mobile);
       onMobileCapture(mobile);
-      onTenantCapture(null);
+      onTenantCapture(tenantId);
       if (exists) {
-        onContinue(); // go to password login
+        onContinue();
       } else {
         onToast('This mobile number does not exist. Please register.', 'error');
-        setNotFound(true); // show register button
+        setNotFound(true);
       }
     } catch {
       onMobileCapture(mobile);
-      onTenantCapture(null);
+      onTenantCapture(1);
       onContinue();
     } finally {
       setLoading(false);

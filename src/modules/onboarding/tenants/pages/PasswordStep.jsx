@@ -6,9 +6,16 @@ import PasswordInput from '../components/PasswordInput';
 
 const ADMIN_ROLES = ['TENANT_ADMIN', 'API_PARTNER', 'WHITELABEL_PARTNER', 'SUPER_ADMIN'];
 
-const PasswordStep = ({ prevStep, onToast, mobile }) => {
+const LOGIN_TYPES = [
+  { value: 'user', label: 'User' },
+  { value: 'tenant', label: 'Tenant' },
+  { value: 'distributor', label: 'Distributor' },
+];
+
+const PasswordStep = ({ prevStep, onToast, mobile, loginType: initialLoginType = 'user' }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loginType, setLoginType] = useState(initialLoginType);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -30,15 +37,19 @@ const PasswordStep = ({ prevStep, onToast, mobile }) => {
       await loginUser({ mobile: email, password });
       const role = localStorage.getItem('userRole') || '';
       login(localStorage.getItem('authToken'), localStorage.getItem('refreshToken'), role);
-      if (ADMIN_ROLES.includes(role)) {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
+      onToast('Logged in successfully!', 'success');
+      setTimeout(() => {
+        if (ADMIN_ROLES.includes(role)) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
+      }, 1000);
     } catch (err) {
       if (err.errCode === '2') {
         login('temp-token', '', 'AGENT');
-        navigate('/');
+        onToast('Logged in successfully!', 'success');
+        setTimeout(() => navigate('/'), 1000);
       } else {
         onToast(err.message || 'Invalid credentials. Please try again.', 'error');
       }
@@ -49,18 +60,25 @@ const PasswordStep = ({ prevStep, onToast, mobile }) => {
 
   return (
     <>
-      {mobile && (
-        <div className="trav_form-group">
-          <label className="form_label">Mobile Number</label>
-          <div className="mobile_input" style={{ background: '#f9fafb' }}>
-            <div className="country">
-              <img src="https://flagcdn.com/w40/in.png" alt="India" />
-              <span>+91</span>
-            </div>
-            <input type="tel" value={mobile} readOnly style={{ background: 'transparent', color: '#6B7280' }} />
-          </div>
-        </div>
-      )}
+
+
+      <div className="trav_form-group" style={{ display: 'flex', gap: '20px', marginTop: '4px' }}>
+        {LOGIN_TYPES.map(({ value, label }) => (
+          <label key={value} style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', fontSize: '14px', color: '#000' }}>
+            <span style={{
+              width: '16px', height: '16px', borderRadius: '50%', flexShrink: 0,
+              border: `2px solid ${loginType === value ? '#f19517' : '#5A5F64'}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              {loginType === value && (
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f19517' }} />
+              )}
+            </span>
+            <input type="radio" name="loginType" value={value} checked={loginType === value} onChange={() => setLoginType(value)} style={{ display: 'none' }} />
+            {label}
+          </label>
+        ))}
+      </div>
 
       <div className="trav_form-group">
         <label className="form_label">Email Address <span style={{ color: '#E70D0D' }}>*</span></label>

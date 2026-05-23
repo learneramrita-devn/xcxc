@@ -15,11 +15,16 @@ const FIELDS_MAP = {
   [REGISTRATION_TYPES.CORPORATE]:   CORPORATE_STEP1_FIELDS,
 };
 
-const AgentRegisterStep = ({ onNext, goToLogin, registrationType: initialType }) => {
-  const [selectedType, setSelectedType] = useState(initialType || '');
+const AgentRegisterStep = ({ onNext, goToLogin, registrationType: initialType, initialData = {} }) => {
+  const [selectedType, setSelectedType] = useState(initialData.selectedAgentType || initialType || '');
   const [form, setForm] = useState({
-    agencyName: '', companyName: '', firstName: '', lastName: '',
-    email: '', referralCode: '', userType: '',
+    agencyName: initialData.agencyName || '',
+    companyName: initialData.companyName || '',
+    firstName: initialData.firstName || '',
+    lastName: initialData.lastName || '',
+    email: initialData.email || '',
+    referralCode: initialData.referralCode || '',
+    userType: initialData.userType || '',
   });
   const [errors, setErrors] = useState({});
 
