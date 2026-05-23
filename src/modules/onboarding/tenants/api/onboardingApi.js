@@ -26,8 +26,15 @@ export const registerUserApi = (payload) => {
   return apiClient.post(ENDPOINTS.REGISTER, payload);
 };
 
-export const updateEmailApi = (payload) =>
-  apiClient.put(ENDPOINTS.UPDATE_EMAIL, payload);
+export const updateEmailApi = (payload) => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    return apiClient.put(ENDPOINTS.UPDATE_EMAIL, payload);
+  }
+  return apiClient.put(ENDPOINTS.UPDATE_EMAIL, payload, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
 
 export const updatePasswordApi = (payload) =>
   apiClient.put(ENDPOINTS.UPDATE_PASSWORD, payload);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import SEOMeta from '../../../shared/components/SEOMeta';
 import Toast from '../../../shared/components/Toast';
 import { useAuth } from '../../../app/providers/AuthContext';
+import ChangePasswordModal from '../components/ChangePasswordModal';
 import {
   getProfileApi,
   updateProfileInfoApi,
@@ -23,6 +24,7 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('Basic Profile');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const [profileForm, setProfileForm] = useState({ firstName: '', lastName: '', email: '', phone: '', dob: '', gender: '' });
   const [addressForm, setAddressForm] = useState({ address: '', country: '', state: '', city: '', pincode: '' });
@@ -120,6 +122,13 @@ export default function ProfilePage() {
     <>
       <SEOMeta title="My Profile – TravelApp" description="View and update your profile details on TravelApp." />
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
+      {showPasswordModal && (
+        <ChangePasswordModal
+          userId={userId}
+          onClose={() => setShowPasswordModal(false)}
+          onToast={showToast}
+        />
+      )}
 
       <div className="profile-page">
         <aside className="profile-sidebar">
@@ -133,6 +142,24 @@ export default function ProfilePage() {
               <li><span>Email Address</span><strong>{user?.sub || 'N/A'}</strong></li>
               <li><span>Role</span><strong>{user?.role || 'N/A'}</strong></li>
             </ul>
+            <button 
+              className="change-password-btn" 
+              onClick={() => setShowPasswordModal(true)}
+              style={{
+                width: '100%',
+                padding: '10px',
+                marginTop: '16px',
+                background: '#F19517',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 600,
+                fontSize: '14px'
+              }}
+            >
+              Change Password
+            </button>
           </div>
         </aside>
 
