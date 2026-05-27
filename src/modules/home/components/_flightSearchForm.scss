@@ -1,4 +1,4 @@
-@import '../../../assets/scss/variable';
+@use '../../../assets/scss/variable' as *;
 
 $bp-xl: 1600px;
 $bp-lg: 1280px;

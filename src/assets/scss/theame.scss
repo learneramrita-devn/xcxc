@@ -1,6 +1,8 @@
-@import 'variable';
-@import 'mixins';
-@import 'base';
-@import 'auth';
-@import '../../layouts/Header/header';
-@import '../../layouts/Footer/footer';
+@use 'variable' as *;
+@use 'mixins' as *;
+@use 'base';
+@use 'auth';
+@use '../../layouts/Header/header';
+@use '../../layouts/Footer/footer';
+@use '../../modules/dashboard/pages/dashboardPage';
+@use '../../modules/users/pages/myAccountPage';

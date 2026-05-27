@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 
 const EyeIcon = ({ show }) => show ? (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -13,19 +13,18 @@ const EyeIcon = ({ show }) => show ? (
   </svg>
 );
 
-const PasswordInput = ({ name, value, onChange, placeholder, className }) => {
+const PasswordInput = forwardRef(({ placeholder, className, ...props }, ref) => {
   const [show, setShow] = useState(false);
 
   return (
     <div style={{ position: 'relative' }}>
       <input
         type={show ? 'text' : 'password'}
-        name={name}
-        value={value}
-        onChange={onChange}
+        ref={ref}
         placeholder={placeholder}
         className={className}
         style={{ paddingRight: '42px' }}
+        {...props}
       />
       <span
         onClick={() => setShow((s) => !s)}
@@ -39,6 +38,8 @@ const PasswordInput = ({ name, value, onChange, placeholder, className }) => {
       </span>
     </div>
   );
-};
+});
+
+PasswordInput.displayName = 'PasswordInput';
 
 export default PasswordInput;

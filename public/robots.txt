@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /my-account
+Disallow: /profile
+
+Sitemap: https://www.travelapp.com/sitemap.xml

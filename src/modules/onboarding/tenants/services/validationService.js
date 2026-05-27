@@ -7,9 +7,20 @@ export const validateFields = (fields, form) => {
 
     const value = form[field.name];
 
+    // Check if value is empty, undefined, null, or just whitespace
     if (!value || (typeof value === 'string' && !value.trim())) {
       errors[field.name] = `${field.label} is required`;
       return;
+    }
+
+    // For text fields, check if it's only special characters or dashes
+    if (field.type === 'text' && typeof value === 'string') {
+      const trimmedValue = value.trim();
+      // Check if value contains at least one alphanumeric character
+      if (!/[a-zA-Z0-9]/.test(trimmedValue)) {
+        errors[field.name] = `${field.label} must contain at least one letter or number`;
+        return;
+      }
     }
 
     if (field.type === 'email' && !/\S+@\S+\.\S+/.test(value)) {

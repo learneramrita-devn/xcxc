@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Endpoint Test</h1>
+    <button onclick="testUserCheck()">Test User Check</button>
+    <button onclick="testRegistration()">Test Registration</button>
+    <pre id="result"></pre>
+
+    <script>
+        function log(msg) {
+            document.getElementById('result').textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        async function testUserCheck() {
+            document.getElementById('result').textContent = '';
+            log('Testing /ums/v1/users/user-check...\n');
+            
+            try {
+                const response = await fetch('/ums/v1/users/user-check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobileIn: ['9999999999'] })
+                });
+                
+                log('Status: ' + response.status);
+                log('Status Text: ' + response.statusText);
+                
+                const data = await response.json();
+                log('Response: ' + JSON.stringify(data, null, 2));
+                
+                if (response.ok) {
+                    log('\n✅ SUCCESS!');
+                } else {
+                    log('\n❌ FAILED!');
+                }
+            } catch (error) {
+                log('❌ ERROR: ' + error.message);
+            }
+        }
+
+        async function testRegistration() {
+            document.getElementById('result').textContent = '';
+            log('Testing /api/v1/users/create...\n');
+            
+            try {
+                const response = await fetch('/api/v1/users/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantId: 1,
+                        name: "Test User",
+                        email: "test@test.com",
+                        mobileNumber: "9999999999",
+                        passwordHash: "Test@123",
+                        role: "AGENT",
+                        agentType: "AGENCY",
+                        status: "ENABLED",
+                        userSource: "WEB"
+                    })
+                });
+                
+                log('Status: ' + response.status);
+                log('Status Text: ' + response.statusText);
+                
+                const data = await response.json();
+                log('Response: ' + JSON.stringify(data, null, 2));
+                
+                if (response.ok) {
+                    log('\n✅ SUCCESS!');
+                } else {
+                    log('\n❌ FAILED!');
+                }
+            } catch (error) {
+                log('❌ ERROR: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

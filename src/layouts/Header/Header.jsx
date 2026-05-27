@@ -41,15 +41,18 @@ const BUSINESS_OPTIONS = [
   },
 ];
 
+const ADMIN_ROLES = ['TENANT_ADMIN', 'API_PARTNER', 'WHITELABEL_PARTNER', 'SUPER_ADMIN'];
+
 export default function Header() {
   const [businessOpen, setBusinessOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [toast, setToast] = useState(null);
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, logout, user } = useAuth();
   const dropdownRef = useRef(null);
   const accountRef = useRef(null);
   const navigate = useNavigate();
+  const isTenant = ADMIN_ROLES.includes(user?.role);
 
   useEffect(() => {
     const handleOutsideClick = (e) => {
@@ -138,18 +141,38 @@ export default function Header() {
               </button>
               {accountOpen && (
                 <div className="header__business-dropdown">
-                  <div className="header__business-dropdown-header">My Account</div>
-                  <Link to="/profile" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
-                    <span className="dropdown-item__title">Profile</span>
-                    <span className="dropdown-item__desc">View & edit your profile</span>
+                  <Link to="/dashboard" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Dashboard</span>
                   </Link>
-                  <Link to="/my-trips" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
-                    <span className="dropdown-item__title">My Trips</span>
-                    <span className="dropdown-item__desc">View your bookings</span>
+                  <Link to="/my-account/basic-profile" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">My Profile</span>
+                  </Link>
+                  <Link to="/my-account/company-details" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Company Details</span>
+                  </Link>
+                  <Link to="/my-account/banking-details" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Banking Details</span>
+                  </Link>
+                  <Link to="/my-account/bookings" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">My Bookings</span>
+                  </Link>
+                  <Link to="/my-account/invoices" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Invoices</span>
+                  </Link>
+                  <Link to="/my-account/reports" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Reports</span>
+                  </Link>
+                  <Link to="/my-account/deposit-request" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Deposit Request</span>
+                  </Link>
+                  <Link to="/my-account/gst-detail" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">GST Detail</span>
+                  </Link>
+                  <Link to="/my-account/frequent-travellers" className="header__business-dropdown-item" onClick={() => { setAccountOpen(false); setMobileNavOpen(false); }}>
+                    <span className="dropdown-item__title">Frequent Travellers</span>
                   </Link>
                   <div className="header__business-dropdown-item" onClick={handleLogout} style={{ cursor: 'pointer' }}>
                     <span className="dropdown-item__title" style={{ color: '#E70D0D' }}>Logout</span>
-                    <span className="dropdown-item__desc">Sign out of your account</span>
                   </div>
                 </div>
               )}

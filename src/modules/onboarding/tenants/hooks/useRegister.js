@@ -27,8 +27,17 @@ export const useRegister = ({ mobile, onSuccess, onToast }) => {
     setLoading(true);
     try {
       await registerUser({ mobile, form });
-      onToast('Registration successful!', 'success');
-      onSuccess();
+      
+      // Show success toast
+      const registrationType = form.selectedAgentType || form.agentType;
+      const isTenant = ['api_partner', 'whitelabel', 'corporate'].includes(registrationType);
+      const message = isTenant ? 'Tenant successfully created!' : 'User successfully created!';
+      onToast(message, 'success');
+      
+      // Redirect to mobile verification after 1.5 seconds
+      setTimeout(() => {
+        onSuccess();
+      }, 1500);
     } catch (err) {
       onToast(err.message, 'error');
     } finally {

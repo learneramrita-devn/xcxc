@@ -32,23 +32,23 @@ flightClient.interceptors.response.use(
 );
 
 const ENDPOINTS = {
-  SEARCH:          '/fms/v1/search',
-  REVIEW:          '/fms/v1/airlines/review',
-  BOOK:            '/fms/v1/airlines/book',
-  BOOK_RETRIEVE:   '/fms/v1/airlines/book-retrieve',
-  AIRLINES_LIST:   '/fms/v1/airlines/list',
-  AIRLINES_SAVE:   '/fms/v1/airlines/save',
-  AIRLINES_UPDATE: '/fms/v1/airlines/update',
-  AIRLINES_DELETE: '/fms/v1/airlines/delete',
-  AIRPORT_SAVE:    '/fms/v1/airport/save',
+  SEARCH:           '/fms/v1/search',
+  REVIEW:           '/fms/v1/review',
+  BOOK:             '/fms/v1/book',
+  BOOK_RETRIEVE:    '/fms/v1/book-retrieve',
+  AIRLINE_LIST:     '/fms/v1/airline/list',
+  AIRLINES_SAVE:    '/fms/v1/airlines/save',
+  AIRPORT_SAVE:     '/fms/v1/airport/save',
+  SUPPLIER_SAVE:    '/fms/v1/supplier-info/save',
+  SUPPLIER_LIST:    '/fms/v1/supplier/list',
 };
 
-export const searchFlightsApi    = (payload) => flightClient.post(ENDPOINTS.SEARCH, payload);
-export const reviewFlightApi     = (payload) => flightClient.post(ENDPOINTS.REVIEW, payload);
-export const bookFlightApi       = (payload) => flightClient.post(ENDPOINTS.BOOK, payload);
-export const bookRetrieveApi     = (payload) => flightClient.post(ENDPOINTS.BOOK_RETRIEVE, payload);
-export const getAirlinesListApi  = ()         => flightClient.get(ENDPOINTS.AIRLINES_LIST);
-export const saveAirlineApi      = (payload) => flightClient.post(ENDPOINTS.AIRLINES_SAVE, payload);
-export const updateAirlineApi    = (payload) => flightClient.put(ENDPOINTS.AIRLINES_UPDATE, payload);
-export const deleteAirlineApi    = (payload) => flightClient.delete(ENDPOINTS.AIRLINES_DELETE, { data: payload });
-export const saveAirportApi      = (payload) => flightClient.post(ENDPOINTS.AIRPORT_SAVE, payload);
+export const searchFlightsApi     = (payload) => flightClient.post(ENDPOINTS.SEARCH, payload);
+export const reviewFlightApi      = (payload) => flightClient.post(ENDPOINTS.REVIEW, payload);
+export const bookFlightApi        = (payload) => flightClient.post(ENDPOINTS.BOOK, payload);
+export const bookRetrieveApi      = (payload) => flightClient.post(ENDPOINTS.BOOK_RETRIEVE, payload);
+export const getAirlineListApi    = ()         => flightClient.get(ENDPOINTS.AIRLINE_LIST);
+export const saveAirlinesApi      = (payload) => flightClient.post(ENDPOINTS.AIRLINES_SAVE, payload);
+export const saveAirportApi       = (payload) => flightClient.post(ENDPOINTS.AIRPORT_SAVE, payload);
+export const saveSupplierInfoApi  = (payload) => flightClient.post(ENDPOINTS.SUPPLIER_SAVE, payload);
+export const getSupplierListApi   = ()         => flightClient.get(ENDPOINTS.SUPPLIER_LIST);

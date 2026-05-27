@@ -81,9 +81,26 @@ const TermsAgreement = ({ onAccept, loading }) => {
           id="terms-agree"
           checked={agreed}
           onChange={(e) => { setAgreed(e.target.checked); if (e.target.checked) setError(''); }}
-          style={{ accentColor: '#f19517', marginTop: '3px', width: '16px', height: '16px', flexShrink: 0 }}
+          disabled={!scrolled}
+          style={{ 
+            accentColor: '#f19517', 
+            marginTop: '3px', 
+            width: '16px', 
+            height: '16px', 
+            flexShrink: 0,
+            cursor: scrolled ? 'pointer' : 'not-allowed',
+            opacity: scrolled ? 1 : 0.5
+          }}
         />
-        <label htmlFor="terms-agree" style={{ fontSize: '13px', color: '#6B7280', lineHeight: '20px', cursor: 'pointer' }}>
+        <label 
+          htmlFor="terms-agree" 
+          style={{ 
+            fontSize: '13px', 
+            color: scrolled ? '#6B7280' : '#9CA3AF', 
+            lineHeight: '20px', 
+            cursor: scrolled ? 'pointer' : 'not-allowed'
+          }}
+        >
           I have read and agree to the <span style={{ color: '#f19517', fontWeight: 600 }}>Terms & Conditions</span> and <span style={{ color: '#f19517', fontWeight: 600 }}>Privacy Policy</span>
         </label>
       </div>

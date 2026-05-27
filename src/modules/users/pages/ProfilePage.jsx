@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SEOMeta from '../../../shared/components/SEOMeta';
 import Toast from '../../../shared/components/Toast';
 import { useAuth } from '../../../app/providers/AuthContext';
-import ChangePasswordModal from '../components/ChangePasswordModal';
 import {
   getProfileApi,
   updateProfileInfoApi,
@@ -12,58 +12,84 @@ import {
   updateKycInfoApi,
   updateSecurityInfoApi,
   updateAdditionalInfoApi,
+  updateEmailApi,
+  updatePasswordApi,
 } from '../api/userApi';
 import './_profilePage.scss';
-
-const TABS = ['Basic Profile', 'Company Details', 'Banking Details', 'Financial Settings', 'System Settings', 'Other Settings'];
 
 export default function ProfilePage() {
   const { user } = useAuth();
   const userId = user?.userId;
+  const location = useLocation();
 
-  const [activeTab, setActiveTab] = useState('Basic Profile');
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [showChangeEmail, setShowChangeEmail] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [currentPasswordForEmail, setCurrentPasswordForEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const [profileForm, setProfileForm] = useState({ firstName: '', lastName: '', email: '', phone: '', dob: '', gender: '' });
   const [addressForm, setAddressForm] = useState({ address: '', country: '', state: '', city: '', pincode: '' });
   const [identityForm, setIdentityForm] = useState({ aadhaar: '' });
   const [businessForm, setBusinessForm] = useState({ agencyName: '', panCard: '', gstNumber: '' });
-  const [kycForm, setKycForm] = useState({ kycStatus: '' });
-  const [securityForm, setSecurityForm] = useState({ twoFactorEnabled: false });
-  const [additionalForm, setAdditionalForm] = useState({ notes: '' });
+  const [bankForm, setBankForm] = useState({ accountName: '', accountNumber: '', ifscCode: '', bankName: '', branch: '' });
 
   useEffect(() => {
     if (!userId) return;
+    
     getProfileApi(userId).then((res) => {
+      console.log('📦 Profile API Response:', res);
       const u = res?.userList?.[0] || res;
       if (!u) return;
-      const nameParts = (u.name || '').split(' ');
+      
+      console.log('👤 User Object:', u);
+      console.log('📍 Address Details:', u.addressDetails);
+      console.log('📄 KYC Details:', u.kycDetails);
+      console.log('🏢 Business Info:', u.businessInfo);
+      
+      const fullName = u.userProfileInfo?.fn || u.name || '';
+      const nameParts = fullName.split(' ');
       setProfileForm((p) => ({
         ...p,
-        firstName: u.userProfileInfo?.fn || nameParts[0] || '',
+        firstName: nameParts[0] || '',
         lastName: nameParts.slice(1).join(' ') || '',
         email: u.email || '',
         phone: u.mobileNumber || '',
         dob: u.userProfileInfo?.dob || '',
-        gender: u.userProfileInfo?.gdr || '',
+        gender: u.userProfileInfo?.gdr?.toLowerCase() || '',
       }));
-      setAddressForm({
-        address: u.addressInfo?.address || '',
-        country: u.addressInfo?.country || '',
-        state: u.addressInfo?.state || '',
-        city: u.addressInfo?.cityName || '',
-        pincode: u.addressInfo?.pinCode || '',
-      });
-      setIdentityForm({ aadhaar: u.userDocuments?.adr || '' });
+      
+      const addressData = {
+        address: u.addressDetails?.address || '',
+        country: u.addressDetails?.country || '',
+        state: u.addressDetails?.state || '',
+        city: u.addressDetails?.cityName || '',
+        pincode: u.addressDetails?.pinCode || '',
+      };
+      console.log('🗺️ Address Data Mapped:', addressData);
+      setAddressForm(addressData);
+      
+      setIdentityForm({ aadhaar: u.kycDetails?.aadhaar || '' });
+      
       setBusinessForm({
         agencyName: u.businessInfo?.bsn || '',
-        panCard: u.userDocuments?.pan || '',
-        gstNumber: u.userDocuments?.gst || '',
+        panCard: u.kycDetails?.pan || '',
+        gstNumber: u.kycDetails?.gst || '',
       });
-      setKycForm({ kycStatus: u.kycInfo?.ks || '' });
-    }).catch(() => {
+      
+      setBankForm({
+        accountName: u.userAdditionalInfo?.bal?.[0]?.ahn || '',
+        accountNumber: u.userAdditionalInfo?.bal?.[0]?.accNo || '',
+        ifscCode: u.userAdditionalInfo?.bal?.[0]?.ifsc || '',
+        bankName: u.userAdditionalInfo?.bal?.[0]?.bn || '',
+        branch: u.userAdditionalInfo?.bal?.[0]?.cmts || '',
+      });
+    }).catch((err) => {
+      console.error('❌ Profile API Error:', err);
       if (user) {
         const nameParts = (user.name || '').split(' ');
         setProfileForm((p) => ({
@@ -77,37 +103,105 @@ export default function ProfilePage() {
     });
   }, [userId]);
 
+  useEffect(() => {
+    const hash = location.hash;
+    if (hash) {
+      setTimeout(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location.hash]);
+
   const showToast = (message, type) => setToast({ message, type });
+
+  const handleChangeEmail = async () => {
+    if (!newEmail || !/\S+@\S+\.\S+/.test(newEmail)) {
+      showToast('Please enter a valid email address', 'error');
+      return;
+    }
+    if (!currentPasswordForEmail) {
+      showToast('Please enter your current password', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      await updateEmailApi({ userId, email: newEmail, currentPassword: currentPasswordForEmail });
+      showToast('Email updated successfully!', 'success');
+      setShowChangeEmail(false);
+      setNewEmail('');
+      setCurrentPasswordForEmail('');
+      setProfileForm(p => ({ ...p, email: newEmail }));
+    } catch (err) {
+      showToast(err.message || 'Failed to update email', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!currentPassword) {
+      showToast('Please enter your current password', 'error');
+      return;
+    }
+    if (!newPassword || newPassword.length < 8) {
+      showToast('Password must be at least 8 characters', 'error');
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      showToast('Passwords do not match', 'error');
+      return;
+    }
+    setLoading(true);
+    try {
+      await updatePasswordApi({ userId, currentPassword, password: newPassword });
+      showToast('Password updated successfully!', 'success');
+      setShowChangePassword(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err) {
+      showToast(err.message || 'Failed to update password', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (activeTab === 'Basic Profile') {
-        await updateProfileInfoApi(userId, {
-          name: `${profileForm.firstName} ${profileForm.lastName}`.trim(),
-          email: profileForm.email,
-          mobileNumber: profileForm.phone,
-          dob: profileForm.dob,
-          gender: profileForm.gender,
-        });
-        await updateAddressInfoApi(userId, {
-          address: addressForm.address,
-          country: addressForm.country,
-          state: addressForm.state,
-          city: addressForm.city,
-          pincode: addressForm.pincode,
-        });
-        await updateIdentityInfoApi(userId, { aadhaar: identityForm.aadhaar });
-      } else if (activeTab === 'Company Details') {
-        await updateBusinessInfoApi(userId, businessForm);
-      } else if (activeTab === 'Financial Settings') {
-        await updateKycInfoApi(userId, kycForm);
-      } else if (activeTab === 'System Settings') {
-        await updateSecurityInfoApi(userId, securityForm);
-      } else if (activeTab === 'Other Settings') {
-        await updateAdditionalInfoApi(userId, additionalForm);
-      }
+      await updateProfileInfoApi(userId, {
+        fn: `${profileForm.firstName} ${profileForm.lastName}`.trim(),
+        gdr: profileForm.gender?.toUpperCase() || 'MALE',
+        dob: profileForm.dob,
+        zip: addressForm.pincode,
+        zd: addressForm.city,
+        co: addressForm.country,
+        tz: 'Asia/Kolkata',
+        language: 'EN',
+        lurl: '',
+      });
+      await updateAddressInfoApi(userId, {
+        address: addressForm.address,
+        country: addressForm.country,
+        state: addressForm.state,
+        cityName: addressForm.city,
+        pinCode: addressForm.pincode,
+      });
+      await updateKycInfoApi(userId, {
+        aadhaar: identityForm.aadhaar,
+        pan: businessForm.panCard,
+        gst: businessForm.gstNumber,
+      });
+      await updateBusinessInfoApi(userId, {
+        bsn: businessForm.agencyName,
+        bstp: 'TRAVEL',
+        rflcd: '',
+      });
+      await updateAdditionalInfoApi(userId, { bal: [{ ...bankForm }] });
       showToast('Saved successfully!', 'success');
     } catch (err) {
       showToast(err.message || 'Failed to save.', 'error');
@@ -122,68 +216,20 @@ export default function ProfilePage() {
     <>
       <SEOMeta title="My Profile – TravelApp" description="View and update your profile details on TravelApp." />
       {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
-      {showPasswordModal && (
-        <ChangePasswordModal
-          userId={userId}
-          onClose={() => setShowPasswordModal(false)}
-          onToast={showToast}
-        />
-      )}
 
-      <div className="profile-page">
-        <aside className="profile-sidebar">
-          <div className="profile-sidebar__card">
-            <div className="profile-sidebar__avatar">
-              <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=F19517&color=fff&size=80`} alt="User" />
-            </div>
-            <h4 className="profile-sidebar__name">{displayName}</h4>
-            <p className="profile-sidebar__id">ID : {userId || 'N/A'}</p>
-            <ul className="profile-sidebar__info">
-              <li><span>Email Address</span><strong>{user?.sub || 'N/A'}</strong></li>
-              <li><span>Role</span><strong>{user?.role || 'N/A'}</strong></li>
-            </ul>
-            <button 
-              className="change-password-btn" 
-              onClick={() => setShowPasswordModal(true)}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '16px',
-                background: '#F19517',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 600,
-                fontSize: '14px'
-              }}
-            >
-              Change Password
-            </button>
-          </div>
-        </aside>
-
+      <div className="profile-page-wrapper">
         <section className="profile-content">
           <div className="profile-content__header">
             <h2>My Profile</h2>
-            <p>Profile / My Profile</p>
-          </div>
-
-          <div className="profile-tabs">
-            {TABS.map((tab) => (
-              <button key={tab} className={activeTab === tab ? 'active' : ''} onClick={() => setActiveTab(tab)}>
-                {tab}
-              </button>
-            ))}
+            <p>Manage your profile information</p>
           </div>
 
           <form onSubmit={handleSave}>
-            {/* Basic Profile */}
-            {activeTab === 'Basic Profile' && (
-              <div className="profile-form-card">
-                <h3 className="profile-form-card__title">Profile Settings</h3>
+            {/* My Profile - Basic & Address */}
+            <div className="profile-form-card" id="basic">
+              <h3 className="profile-form-card__title">My Profile</h3>
 
-                <p className="profile-form-card__section-title">Basic Information</p>
+              <p className="profile-form-card__section-title">Basic Information</p>
                 <div className="profile-form-grid">
                   <div className="profile-form-group">
                     <label>First Name</label>
@@ -214,17 +260,9 @@ export default function ProfilePage() {
                       <option value="other">Other</option>
                     </select>
                   </div>
-                  <div className="profile-form-group full-width">
-                    <label>Aadhaar Number</label>
-                    <div className="verify-row">
-                      <input type="text" value={identityForm.aadhaar} onChange={(e) => setIdentityForm(p => ({ ...p, aadhaar: e.target.value }))} placeholder="Enter Aadhaar number" maxLength={12} />
-                      <span className="verify-row__warning">Verify Aadhaar to complete your profile</span>
-                      <button type="button" className="verify-row__btn">Verify</button>
-                    </div>
-                  </div>
                 </div>
 
-                <p className="profile-form-card__section-title">Personal Address Information</p>
+                <p className="profile-form-card__section-title">Address Information</p>
                 <div className="profile-form-grid">
                   <div className="profile-form-group full-width">
                     <label>Address</label>
@@ -234,7 +272,7 @@ export default function ProfilePage() {
                     <label>Country</label>
                     <select value={addressForm.country} onChange={(e) => setAddressForm(p => ({ ...p, country: e.target.value }))}>
                       <option value="">Select Country</option>
-                      <option value="india">India</option>
+                      <option value="India">India</option>
                     </select>
                   </div>
                   <div className="profile-form-group">
@@ -285,22 +323,26 @@ export default function ProfilePage() {
                     <input type="text" value={addressForm.city} onChange={(e) => setAddressForm(p => ({ ...p, city: e.target.value }))} placeholder="Enter city" />
                   </div>
                   <div className="profile-form-group">
-                    <label>Pincode / Zip Code</label>
+                    <label>Pincode</label>
                     <input type="text" value={addressForm.pincode} onChange={(e) => setAddressForm(p => ({ ...p, pincode: e.target.value }))} placeholder="Enter pincode" maxLength={6} />
                   </div>
                 </div>
               </div>
-            )}
 
-            {/* Company Details */}
-            {activeTab === 'Company Details' && (
-              <div className="profile-form-card">
-                <h3 className="profile-form-card__title">Company Details</h3>
+            {/* Company Details - Business Info & KYC */}
+            <div className="profile-form-card" id="company">
+              <h3 className="profile-form-card__title">Company Details</h3>
+              
+              <p className="profile-form-card__section-title">Business Information</p>
                 <div className="profile-form-grid">
                   <div className="profile-form-group">
                     <label>Agency Name</label>
                     <input type="text" value={businessForm.agencyName} onChange={(e) => setBusinessForm(p => ({ ...p, agencyName: e.target.value }))} placeholder="Enter agency name" />
                   </div>
+                </div>
+              
+              <p className="profile-form-card__section-title">KYC Details</p>
+                <div className="profile-form-grid">
                   <div className="profile-form-group">
                     <label>PAN Card</label>
                     <input type="text" value={businessForm.panCard} onChange={(e) => setBusinessForm(p => ({ ...p, panCard: e.target.value }))} placeholder="Enter PAN number" maxLength={10} />
@@ -309,72 +351,93 @@ export default function ProfilePage() {
                     <label>GST Number</label>
                     <input type="text" value={businessForm.gstNumber} onChange={(e) => setBusinessForm(p => ({ ...p, gstNumber: e.target.value }))} placeholder="Enter GST number" />
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* Financial Settings */}
-            {activeTab === 'Financial Settings' && (
-              <div className="profile-form-card">
-                <h3 className="profile-form-card__title">Financial Settings</h3>
-                <div className="profile-form-grid">
                   <div className="profile-form-group">
-                    <label>KYC Status</label>
-                    <select value={kycForm.kycStatus} onChange={(e) => setKycForm(p => ({ ...p, kycStatus: e.target.value }))}>
-                      <option value="">Select Status</option>
-                      <option value="PENDING">Pending</option>
-                      <option value="VERIFIED">Verified</option>
-                      <option value="REJECTED">Rejected</option>
-                    </select>
+                    <label>Aadhaar Number</label>
+                    <div className="verify-row">
+                      <input type="text" value={identityForm.aadhaar} onChange={(e) => setIdentityForm(p => ({ ...p, aadhaar: e.target.value }))} placeholder="Enter Aadhaar number" maxLength={12} />
+                      <span className="verify-row__warning">Verify Aadhaar to complete your profile</span>
+                      <button type="button" className="verify-row__btn">Verify</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
-
-            {/* System Settings */}
-            {activeTab === 'System Settings' && (
-              <div className="profile-form-card">
-                <h3 className="profile-form-card__title">System Settings</h3>
-                <div className="profile-form-grid">
-                  <div className="profile-form-group full-width">
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <input type="checkbox" checked={securityForm.twoFactorEnabled} onChange={(e) => setSecurityForm(p => ({ ...p, twoFactorEnabled: e.target.checked }))} />
-                      Enable Two-Factor Authentication
-                    </label>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Other Settings */}
-            {activeTab === 'Other Settings' && (
-              <div className="profile-form-card">
-                <h3 className="profile-form-card__title">Other Settings</h3>
-                <div className="profile-form-grid">
-                  <div className="profile-form-group full-width">
-                    <label>Notes</label>
-                    <input type="text" value={additionalForm.notes} onChange={(e) => setAdditionalForm(p => ({ ...p, notes: e.target.value }))} placeholder="Additional notes" />
-                  </div>
-                </div>
-              </div>
-            )}
 
             {/* Banking Details */}
-            {activeTab === 'Banking Details' && (
-              <div className="profile-form-card">
-                <p style={{ color: '#6B7280', fontSize: '14px', textAlign: 'center', padding: '40px 0' }}>
-                  Banking Details — Coming Soon
-                </p>
+            <div className="profile-form-card" id="banking">
+              <h3 className="profile-form-card__title">Banking Details</h3>
+                <div className="profile-form-grid">
+                  <div className="profile-form-group">
+                    <label>Account Holder Name</label>
+                    <input type="text" value={bankForm.accountName} onChange={(e) => setBankForm(p => ({ ...p, accountName: e.target.value }))} placeholder="Enter account holder name" />
+                  </div>
+                  <div className="profile-form-group">
+                    <label>Account Number</label>
+                    <input type="text" value={bankForm.accountNumber} onChange={(e) => setBankForm(p => ({ ...p, accountNumber: e.target.value }))} placeholder="Enter account number" />
+                  </div>
+                  <div className="profile-form-group">
+                    <label>IFSC Code</label>
+                    <input type="text" value={bankForm.ifscCode} onChange={(e) => setBankForm(p => ({ ...p, ifscCode: e.target.value }))} placeholder="Enter IFSC code" />
+                  </div>
+                  <div className="profile-form-group">
+                    <label>Bank Name</label>
+                    <input type="text" value={bankForm.bankName} onChange={(e) => setBankForm(p => ({ ...p, bankName: e.target.value }))} placeholder="Enter bank name" />
+                  </div>
+                  <div className="profile-form-group full-width">
+                    <label>Branch</label>
+                    <input type="text" value={bankForm.branch} onChange={(e) => setBankForm(p => ({ ...p, branch: e.target.value }))} placeholder="Enter branch name" />
+                  </div>
+                </div>
               </div>
-            )}
 
-            {activeTab !== 'Banking Details' && (
-              <div className="profile-form-actions">
-                <button type="button" className="cancel-btn" onClick={() => setActiveTab('Basic Profile')}>Cancel</button>
-                <button type="submit" className="save-btn" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
-              </div>
-            )}
+            <div className="profile-form-actions">
+              <button type="button" className="cancel-btn">Cancel</button>
+              <button type="submit" className="save-btn" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
+            </div>
           </form>
+
+          {showChangeEmail && (
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+              <div style={{ background: '#fff', padding: '30px', borderRadius: '8px', width: '90%', maxWidth: '400px' }}>
+                <h3 style={{ marginBottom: '20px', fontSize: '18px', fontWeight: 600 }}>Change Email</h3>
+                <div style={{ marginBottom: '15px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 500 }}>Current Password</label>
+                  <input type="password" value={currentPasswordForEmail} onChange={(e) => setCurrentPasswordForEmail(e.target.value)} placeholder="Enter current password" style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div style={{ marginBottom: '15px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 500 }}>New Email Address</label>
+                  <input type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="Enter new email" style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                  <button onClick={() => { setShowChangeEmail(false); setNewEmail(''); setCurrentPasswordForEmail(''); }} style={{ padding: '8px 16px', background: '#6B7280', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+                  <button onClick={handleChangeEmail} disabled={loading} style={{ padding: '8px 16px', background: '#F19517', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>{loading ? 'Updating...' : 'Update'}</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {showChangePassword && (
+            <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999 }}>
+              <div style={{ background: '#fff', padding: '30px', borderRadius: '8px', width: '90%', maxWidth: '400px' }}>
+                <h3 style={{ marginBottom: '20px', fontSize: '18px', fontWeight: 600 }}>Change Password</h3>
+                <div style={{ marginBottom: '15px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 500 }}>Current Password</label>
+                  <input type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="Enter current password" style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div style={{ marginBottom: '15px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 500 }}>New Password</label>
+                  <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Enter new password" style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div style={{ marginBottom: '15px' }}>
+                  <label style={{ display: 'block', marginBottom: '5px', fontSize: '14px', fontWeight: 500 }}>Confirm Password</label>
+                  <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirm new password" style={{ width: '100%', padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }} />
+                </div>
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                  <button onClick={() => { setShowChangePassword(false); setCurrentPassword(''); setNewPassword(''); setConfirmPassword(''); }} style={{ padding: '8px 16px', background: '#6B7280', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Cancel</button>
+                  <button onClick={handleChangePassword} disabled={loading} style={{ padding: '8px 16px', background: '#F19517', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>{loading ? 'Updating...' : 'Update'}</button>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
       </div>
     </>

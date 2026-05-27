@@ -1,0 +1,154 @@
+.flight-review-page {
+  padding: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+}
+
+.review-container {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+
+  .btn-back {
+    background: #f3f4f6;
+    color: #374151;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+}
+
+.flight-details-card {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.section {
+  padding: 20px 0;
+  border-bottom: 1px solid #e5e7eb;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 16px 0;
+  }
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+
+  span {
+    color: #6b7280;
+  }
+
+  strong {
+    color: #1f2937;
+    font-weight: 600;
+  }
+
+  &.total {
+    font-size: 18px;
+    padding-top: 16px;
+    margin-top: 8px;
+    border-top: 2px solid #e5e7eb;
+
+    strong {
+      color: #667eea;
+      font-size: 24px;
+    }
+  }
+}
+
+.fare-section {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.btn-proceed {
+  width: 100%;
+  padding: 14px;
+  background: #667eea;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #5568d3;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px);
+  gap: 20px;
+
+  button {
+    background: #667eea;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+@media (max-width: 768px) {
+  .review-container {
+    padding: 20px;
+  }
+
+  .flight-details-card {
+    padding: 16px;
+  }
+}

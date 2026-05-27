@@ -41,12 +41,14 @@ export const STEP1_FIELDS = [
 ];
 
 export const CORPORATE_STEP1_FIELDS = [
-  { name: 'companyName',  label: 'Corporate Company Name',       type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
-  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
-  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
-  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
-  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin', 'Employee'] },
-  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
+  { name: 'companyName',  label: 'Corporate Company Name',       type: 'text',   placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',   placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',   placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email',  placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',           required: true,  col: 6, options: ['Admin', 'Sub Admin', 'Employee'] },
+  { name: 'gender',       label: 'Gender',                       type: 'select', placeholder: 'Select Gender',              required: true,  col: 6, options: ['MALE', 'FEMALE', 'OTHER'] },
+  { name: 'dob',          label: 'Date of Birth',                type: 'date',   placeholder: 'Select date of birth',       required: true,  col: 6 },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',   placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const FIRM_TYPE_FIELDS = {
@@ -101,21 +103,25 @@ export const FIRM_TYPE_FIELDS = {
 };
 
 export const API_PARTNER_STEP1_FIELDS = [
-  { name: 'companyName',  label: 'API Partner Company Name',     type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
-  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
-  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
-  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
-  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
-  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
+  { name: 'companyName',  label: 'API Partner Company Name',     type: 'text',   placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',   placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',   placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email',  placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',           required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
+  { name: 'gender',       label: 'Gender',                       type: 'select', placeholder: 'Select Gender',              required: true,  col: 6, options: ['MALE', 'FEMALE', 'OTHER'] },
+  { name: 'dob',          label: 'Date of Birth',                type: 'date',   placeholder: 'Select date of birth',       required: true,  col: 6 },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',   placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const WHITELABEL_STEP1_FIELDS = [
-  { name: 'companyName',  label: 'Whitelabel Company Name',      type: 'text',  placeholder: 'Enter company name',         required: true,  col: 12 },
-  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',  placeholder: 'Enter first name',           required: true,  col: 6 },
-  { name: 'lastName',     label: 'Last Name',                    type: 'text',  placeholder: 'Enter last name',            required: true,  col: 6 },
-  { name: 'email',        label: 'Communication Email Address',  type: 'email', placeholder: 'Enter email address',        required: true,  col: 6 },
-  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',          required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
-  { name: 'referralCode', label: 'Reference',                    type: 'text',  placeholder: 'Enter reference (optional)', required: false, col: 6 },
+  { name: 'companyName',  label: 'Whitelabel Company Name',      type: 'text',   placeholder: 'Enter company name',         required: true,  col: 12 },
+  { name: 'firstName',    label: 'First Name (Director/ Owner)', type: 'text',   placeholder: 'Enter first name',           required: true,  col: 6 },
+  { name: 'lastName',     label: 'Last Name',                    type: 'text',   placeholder: 'Enter last name',            required: true,  col: 6 },
+  { name: 'email',        label: 'Communication Email Address',  type: 'email',  placeholder: 'Enter email address',        required: true,  col: 6 },
+  { name: 'userType',     label: 'User Type',                    type: 'select', placeholder: 'Select User Type',           required: true,  col: 6, options: ['Admin', 'Sub Admin'] },
+  { name: 'gender',       label: 'Gender',                       type: 'select', placeholder: 'Select Gender',              required: true,  col: 6, options: ['MALE', 'FEMALE', 'OTHER'] },
+  { name: 'dob',          label: 'Date of Birth',                type: 'date',   placeholder: 'Select date of birth',       required: true,  col: 6 },
+  { name: 'referralCode', label: 'Reference',                    type: 'text',   placeholder: 'Enter reference (optional)', required: false, col: 6 },
 ];
 
 export const STEP3_FIELDS = [

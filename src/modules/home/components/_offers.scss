@@ -1,6 +1,6 @@
-@import '../../../assets/scss/variable';
-@import '../../../assets/scss/mixins';
-@import 'card';
+@use '../../../assets/scss/variable' as *;
+@use '../../../assets/scss/mixins' as *;
+@use 'card' as *;
 
 .offers {
     background: $bg-light;

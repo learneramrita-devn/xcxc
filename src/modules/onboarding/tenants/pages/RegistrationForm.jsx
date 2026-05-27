@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../components/AuthLayout';
 import logo from '@/assets/images/logo.png';
@@ -60,107 +60,91 @@ const getStepContent = (regType) => ({
 });
 
 const RegistrationForm = ({ registrationType: initialType = null }) => {
-  const [step, setStep] = useState(() => {
-    const saved = sessionStorage.getItem('registrationStep');
-    return saved || STEPS.MOBILE;
-  });
-  const [mobile, setMobile] = useState(() => sessionStorage.getItem('registrationMobile') || '');
-  const [tenantId, setTenantId] = useState(() => {
-    const saved = sessionStorage.getItem('registrationTenantId');
-    return saved ? Number(saved) : null;
-  });
-  const [loginType, setLoginType] = useState(() => sessionStorage.getItem('registrationLoginType') || 'user');
-  const [registerData, setRegisterData] = useState(() => {
-    const saved = sessionStorage.getItem('registrationData');
-    return saved ? JSON.parse(saved) : {};
-  });
-  const [registeredUserId, setRegisteredUserId] = useState(() => {
-    const saved = sessionStorage.getItem('registeredUserId');
-    return saved ? Number(saved) : null;
-  });
+  const STORAGE_KEY = 'registrationFormData';
+  
+  const getSavedData = () => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : {};
+    } catch { return {}; }
+  };
+
+  const savedData = getSavedData();
+  const [step, setStep] = useState(savedData.step || STEPS.MOBILE);
+  const [mobile, setMobile] = useState(savedData.mobile || '');
+  const [tenantId, setTenantId] = useState(savedData.tenantId || null);
+  const [loginType, setLoginType] = useState(savedData.loginType || 'USER');
+  const [registerData, setRegisterData] = useState(savedData.registerData || {});
+  const [registeredUserId, setRegisteredUserId] = useState(savedData.registeredUserId || null);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [registrationType, setRegistrationType] = useState(() => {
-    const saved = sessionStorage.getItem('registrationType');
-    return saved || initialType;
-  });
+  const [registrationType, setRegistrationType] = useState(savedData.registrationType || initialType);
 
   const navigate = useNavigate();
   const { login } = useAuth();
   const stepContent = getStepContent(registrationType);
   const showToast = (message, type) => setToast({ message, type });
 
-  // Persist state to sessionStorage
-  const updateStep = (newStep) => {
-    setStep(newStep);
-    sessionStorage.setItem('registrationStep', newStep);
-  };
+  useEffect(() => {
+    const dataToSave = { step, mobile, tenantId, loginType, registerData, registeredUserId, registrationType };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+  }, [step, mobile, tenantId, loginType, registerData, registeredUserId, registrationType]);
 
-  const updateMobile = (newMobile) => {
-    setMobile(newMobile);
-    sessionStorage.setItem('registrationMobile', newMobile);
-  };
-
-  const updateTenantId = (newTenantId) => {
-    setTenantId(newTenantId);
-    sessionStorage.setItem('registrationTenantId', newTenantId);
-  };
-
-  const updateLoginType = (newLoginType) => {
-    setLoginType(newLoginType);
-    sessionStorage.setItem('registrationLoginType', newLoginType);
-  };
-
-  const updateRegisterData = (newData) => {
-    setRegisterData(newData);
-    sessionStorage.setItem('registrationData', JSON.stringify(newData));
-  };
-
-  const updateRegistrationType = (newType) => {
-    setRegistrationType(newType);
-    sessionStorage.setItem('registrationType', newType);
-  };
-
-  const clearRegistrationData = () => {
-    sessionStorage.removeItem('registrationStep');
-    sessionStorage.removeItem('registrationMobile');
-    sessionStorage.removeItem('registrationTenantId');
-    sessionStorage.removeItem('registrationLoginType');
-    sessionStorage.removeItem('registrationData');
-    sessionStorage.removeItem('registeredUserId');
-    sessionStorage.removeItem('registrationType');
-  };
+  useEffect(() => {
+    if (step === STEPS.SUCCESS) {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [step]);
 
   const handleStep1Next = (d) => {
     // if came from Login/Signup, update registrationType from selected type
     if (!initialType && d.selectedAgentType) {
-      updateRegistrationType(d.selectedAgentType);
+      setRegistrationType(d.selectedAgentType);
     }
-    const newData = { ...registerData, ...d };
-    updateRegisterData(newData);
-    updateStep(STEPS.REGISTER_2);
+    setRegisterData((p) => ({ ...p, ...d }));
+    setStep(STEPS.REGISTER_2);
   };
-  const handleStep2Next = (d) => {
-    const newData = { ...registerData, ...d };
-    updateRegisterData(newData);
-    updateStep(STEPS.REGISTER_3);
-  };
-  const handleStep3Submit = (password) => {
-    const newData = { ...registerData, password };
-    updateRegisterData(newData);
-    updateStep(STEPS.TERMS);
-  };
+  const handleStep2Next = (d) => { setRegisterData((p) => ({ ...p, ...d })); setStep(STEPS.REGISTER_3); };
+  const handleStep3Submit = (password) => { setRegisterData((p) => ({ ...p, password })); setStep(STEPS.TERMS); };
 
   const handleTermsAccept = async () => {
+    if (!mobile) {
+      showToast('Mobile number is required', 'error');
+      return;
+    }
+    
+    if (!registerData.email) {
+      showToast('Email is required', 'error');
+      return;
+    }
+    
+    if (!registerData.password) {
+      showToast('Password is required', 'error');
+      return;
+    }
+    
     setLoading(true);
     try {
       const res = await registerUser({ mobile, tenantId, form: registerData, registrationType });
-      const userId = res?.userId || null;
-      setRegisteredUserId(userId);
-      sessionStorage.setItem('registeredUserId', userId);
-      updateStep(STEPS.SUCCESS);
+      
+      const regType = registrationType || registerData.selectedAgentType;
+      const isTenant = ['api_partner', 'whitelabel', 'corporate'].includes(regType);
+      const successMessage = isTenant ? 'Tenant successfully created!' : 'User successfully created!';
+      
+      showToast(successMessage, 'success');
+      
+      setRegisteredUserId(res?.userId || res?.tenantId || null);
+      
+      setTimeout(() => {
+        setStep(STEPS.SUCCESS);
+      }, 1500);
+      
     } catch (err) {
-      showToast(err.message, 'error');
+      if (err.status === 401 || err.errCode === '29') {
+        showToast('Registration failed. Please check your details and try again.', 'error');
+      } else {
+        showToast(err.message || 'Registration failed. Please try again.', 'error');
+      }
     } finally {
       setLoading(false);
     }
@@ -190,88 +174,85 @@ const RegistrationForm = ({ registrationType: initialType = null }) => {
         </div>
 
         <div className="trav_form-body">
-          <form onSubmit={(e) => e.preventDefault()}>
+          {/* Step 1: Mobile — exist → password login, not exist → toast + register button */}
+          {step === STEPS.MOBILE && (
+            <MobileStep
+              onContinue={() => setStep(STEPS.LOGIN_PASSWORD)}
+              onRegister={() => setStep(STEPS.OTP)}
+              onMobileCapture={setMobile}
+              onTenantCapture={setTenantId}
+              onLoginTypeCapture={setLoginType}
+              onToast={showToast}
+              initialMobile={mobile}
+            />
+          )}
 
-            {/* Step 1: Mobile — exist → password login, not exist → toast + register button */}
-            {step === STEPS.MOBILE && (
-              <MobileStep
-                onContinue={() => updateStep(STEPS.LOGIN_PASSWORD)}
-                onRegister={() => updateStep(STEPS.OTP)}
-                onMobileCapture={updateMobile}
-                onTenantCapture={updateTenantId}
-                onLoginTypeCapture={updateLoginType}
-                onToast={showToast}
-              />
-            )}
+          {/* Step 2A: Login with password (existing user) */}
+          {step === STEPS.LOGIN_PASSWORD && (
+            <PasswordStep
+              prevStep={() => setStep(STEPS.MOBILE)}
+              onToast={showToast}
+              mobile={mobile}
+              loginType={loginType}
+            />
+          )}
 
-            {/* Step 2A: Login with password (existing user) */}
-            {step === STEPS.LOGIN_PASSWORD && (
-              <PasswordStep
-                prevStep={() => updateStep(STEPS.MOBILE)}
-                onToast={showToast}
-                mobile={mobile}
-                loginType={loginType}
-              />
-            )}
+          {/* Step 2B: OTP — only for register flow */}
+          {step === STEPS.OTP && (
+            <OTPModal
+              mobile={mobile}
+              onClose={() => setStep(STEPS.MOBILE)}
+              onSuccess={() => setStep(STEPS.REGISTER_1)}
+            />
+          )}
 
-            {/* Step 2B: OTP — only for register flow */}
-            {step === STEPS.OTP && (
-              <OTPModal
-                mobile={mobile}
-                onClose={() => updateStep(STEPS.MOBILE)}
-                onSuccess={() => updateStep(STEPS.REGISTER_1)}
-              />
-            )}
+          {step === STEPS.REGISTER_1 && (
+            <AgentRegisterStep
+              onNext={handleStep1Next}
+              goToLogin={() => setStep(STEPS.MOBILE)}
+              registrationType={initialType}
+              initialData={registerData}
+            />
+          )}
 
-            {step === STEPS.REGISTER_1 && (
-              <AgentRegisterStep
-                onNext={handleStep1Next}
-                goToLogin={() => { clearRegistrationData(); updateStep(STEPS.MOBILE); }}
-                registrationType={initialType}
-                initialData={registerData}
-              />
-            )}
+          {step === STEPS.REGISTER_2 && (
+            <Step2AgencyDetails
+              onNext={handleStep2Next}
+              onBack={() => setStep(STEPS.REGISTER_1)}
+              initialData={registerData}
+            />
+          )}
 
-            {step === STEPS.REGISTER_2 && (
-              <Step2AgencyDetails
-                onNext={handleStep2Next}
-                onBack={() => updateStep(STEPS.REGISTER_1)}
-                initialData={registerData}
-              />
-            )}
+          {step === STEPS.REGISTER_3 && (
+            <Step3Password
+              onSubmit={handleStep3Submit}
+              onBack={() => setStep(STEPS.REGISTER_2)}
+              loading={loading}
+            />
+          )}
 
-            {step === STEPS.REGISTER_3 && (
-              <Step3Password
-                onSubmit={handleStep3Submit}
-                onBack={() => updateStep(STEPS.REGISTER_2)}
-                loading={loading}
-              />
-            )}
+          {step === STEPS.TERMS && (
+            <TermsAgreement
+              onAccept={handleTermsAccept}
+              loading={loading}
+            />
+          )}
 
-            {step === STEPS.TERMS && (
-              <TermsAgreement
-                onAccept={handleTermsAccept}
-                loading={loading}
-              />
-            )}
+          {step === STEPS.SUCCESS && (
+            <RegistrationSuccess
+              email={registerData.email}
+              onEditEmail={() => setStep(STEPS.UPDATE_EMAIL)}
+              onBackToSignIn={() => setStep(STEPS.MOBILE)}
+            />
+          )}
 
-            {step === STEPS.SUCCESS && (
-              <RegistrationSuccess
-                email={registerData.email}
-                onEditEmail={() => updateStep(STEPS.UPDATE_EMAIL)}
-                onBackToSignIn={() => { clearRegistrationData(); updateStep(STEPS.MOBILE); }}
-              />
-            )}
-
-            {step === STEPS.UPDATE_EMAIL && (
-              <UpdateEmail
-                userId={registeredUserId}
-                onBackToSignIn={() => { clearRegistrationData(); updateStep(STEPS.MOBILE); }}
-                onToast={showToast}
-              />
-            )}
-
-          </form>
+          {step === STEPS.UPDATE_EMAIL && (
+            <UpdateEmail
+              userId={registeredUserId}
+              onBackToSignIn={() => setStep(STEPS.MOBILE)}
+              onToast={showToast}
+            />
+          )}
         </div>
       </div>
     </AuthLayout>

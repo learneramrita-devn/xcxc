@@ -25,6 +25,8 @@ const AgentRegisterStep = ({ onNext, goToLogin, registrationType: initialType, i
     email: initialData.email || '',
     referralCode: initialData.referralCode || '',
     userType: initialData.userType || '',
+    gender: initialData.gender || '',
+    dob: initialData.dob || '',
   });
   const [errors, setErrors] = useState({});
 

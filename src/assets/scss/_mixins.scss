@@ -1,4 +1,4 @@
-@import 'variable';
+@use 'variable' as *;
 
 // ─── Responsive ────────────────────────────────────────────────────────────
 @mixin respond-to($bp) {
